@@ -6,19 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Scaffold.Model;
 
-[Index("MeasureId", Name = "fk_HttpTransmittingMetric_Measure1_idx", IsUnique = true)]
+[Index("MeasureGroupId", Name = "fk_HttpTransmittingMetric_MeasureGroup1_idx", IsUnique = true)]
 public partial class HttpTransmittingMetric
 {
-    /// <summary>
-    /// Показатели качества услуг связи по передаче данных, за исключением услуг связи по передаче данных для целей передачи голосовой информации
-    /// </summary>
     [Key]
-    public int id { get; set; }
-
-    /// <summary>
-    /// Внешний идентификатор измерения
-    /// </summary>
-    public int MeasureId { get; set; }
+    public int MeasureGroupId { get; set; }
 
     /// <summary>
     /// Доля неуспешных сессий по протоколу HTTP (HTTP Session Failure Ratio) [%]
@@ -40,7 +32,7 @@ public partial class HttpTransmittingMetric
     /// </summary>
     public float SessionTime { get; set; }
 
-    [ForeignKey("MeasureId")]
+    [ForeignKey("MeasureGroupId")]
     [InverseProperty("HttpTransmittingMetric")]
-    public virtual Measure Measure { get; set; } = null!;
+    public virtual MeasureGroup MeasureGroup { get; set; } = null!;
 }
