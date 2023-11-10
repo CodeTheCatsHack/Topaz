@@ -10,7 +10,7 @@ public static class CoreDi
     public static IServiceCollection AddCoreDi(this IServiceCollection services, IConfiguration configuration)
     {
         return services.AddLoggers()
-            .AddDataBaseContext(configuration)
+            //.AddDataBaseContext(configuration)
             .AddCors();
     }
 
