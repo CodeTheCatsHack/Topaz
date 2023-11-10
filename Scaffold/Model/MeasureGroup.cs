@@ -26,6 +26,9 @@ public partial class MeasureGroup
 
     public int ReferenceInfoId { get; set; }
 
+    [StringLength(50)]
+    public string MeasureSubject { get; set; } = null!;
+
     [InverseProperty("MeasureGroup")]
     public virtual HttpTransmittingMetric? HttpTransmittingMetric { get; set; }
 
