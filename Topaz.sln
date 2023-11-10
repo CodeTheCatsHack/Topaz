@@ -3,11 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Topaz", "TopazWebApp\Topaz.csproj", "{CD1CFE32-B6EE-49F8-BB31-FB218FAEAC03}"
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {02D2DD46-EE25-441C-B29B-E39851627136}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CD1CFE32-B6EE-49F8-BB31-FB218FAEAC03}.|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD1CFE32-B6EE-49F8-BB31-FB218FAEAC03}.|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		|Any CPU = |Any CPU
 	EndGlobalSection
 EndGlobal
