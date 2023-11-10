@@ -4,16 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Scaffold.Model;
 
-[Index("MeasureId", Name = "fk_ReferenceInfo_Measure1_idx", IsUnique = true)]
-public partial class ReferenceInfo
+[Index("MeasureGroupId", Name = "fk_ReferenceInfoMetric_MeasureGroup1_idx", IsUnique = true)]
+public partial class ReferenceInfoMetric
 {
-    /// <summary>
-    ///     Идентификатор справочной информации
-    /// </summary>
-    [Key]
-    public int id { get; set; }
-
-    public int MeasureId { get; set; }
+    [Key] public int MeasureGroupId { get; set; }
 
     /// <summary>
     ///     Общее количество тестовых голосовых соединений
@@ -45,7 +39,7 @@ public partial class ReferenceInfo
     /// </summary>
     public int TotalTestSessions { get; set; }
 
-    [ForeignKey("MeasureId")]
-    [InverseProperty("ReferenceInfo")]
-    public virtual Measure Measure { get; set; } = null!;
+    [ForeignKey("MeasureGroupId")]
+    [InverseProperty("ReferenceInfoMetric")]
+    public virtual MeasureGroup MeasureGroup { get; set; } = null!;
 }
