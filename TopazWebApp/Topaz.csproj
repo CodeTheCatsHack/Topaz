@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Scaffold\Scaffold.csproj"/>
+      <ProjectReference Include="..\Scaffold\Scaffold.csproj"/>
   </ItemGroup>
 
 </Project>

@@ -1,10 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace Scaffold.Model;
 
-[Index("MeasureId", Name = "fk_MeasureInfo_Measure1_idx")]
 public partial class MeasureInfo
 {
     [Key] public int MeasureId { get; set; }
