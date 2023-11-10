@@ -1,21 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Scaffold.Model;
 
 namespace Scaffold.Context;
 
-public partial class TopazContext : DbContext
+public partial class TopazContext
 {
-    public TopazContext()
-    {
-    }
-
-    public TopazContext(DbContextOptions<TopazContext> options)
-        : base(options)
-    {
-    }
-
     public virtual DbSet<HttpTransmittingMetric> HttpTransmittingMetric { get; set; }
 
     public virtual DbSet<Measure> Measure { get; set; }
@@ -41,10 +30,13 @@ public partial class TopazContext : DbContext
             entity.HasKey(e => e.MeasureGroupId).HasName("PRIMARY");
 
             entity.Property(e => e.MeasureGroupId).ValueGeneratedNever();
-            entity.Property(e => e.DLMeanUserDataRate).HasComment("Среднее значение скорости передачи данных к абоненту (HTTP DL Mean User Data Rate) [kbit/sec]");
-            entity.Property(e => e.SessionFailureRatio).HasComment("Доля неуспешных сессий по протоколу HTTP (HTTP Session Failure Ratio) [%]");
+            entity.Property(e => e.DLMeanUserDataRate).HasComment(
+                "Среднее значение скорости передачи данных к абоненту (HTTP DL Mean User Data Rate) [kbit/sec]");
+            entity.Property(e => e.SessionFailureRatio)
+                .HasComment("Доля неуспешных сессий по протоколу HTTP (HTTP Session Failure Ratio) [%]");
             entity.Property(e => e.SessionTime).HasComment("Продолжительность успешной сессии (HTTP Session Time) [s]");
-            entity.Property(e => e.ULMeanUserDataRate).HasComment("Среднее значение скорости передачи данных от абонента (HTTP UL Mean User Data Rate) [kbit/sec]");
+            entity.Property(e => e.ULMeanUserDataRate).HasComment(
+                "Среднее значение скорости передачи данных от абонента (HTTP UL Mean User Data Rate) [kbit/sec]");
 
             entity.HasOne(d => d.MeasureGroup).WithOne(p => p.HttpTransmittingMetric)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -105,12 +97,17 @@ public partial class TopazContext : DbContext
             entity.HasKey(e => e.MeasureGroupId).HasName("PRIMARY");
 
             entity.Property(e => e.MeasureGroupId).ValueGeneratedNever();
-            entity.Property(e => e.NegativeMOSsamplesCount).HasComment("Количество голосовых соединений с низкой разборчивостью (Negative MOS samples Count, MOS POLQA<2,6)[%]");
-            entity.Property(e => e.TotalConnectionAttempts).HasComment("Общее количество попыток соединений с сервером передачи данных HTTP (Загрузка файлов)");
+            entity.Property(e => e.NegativeMOSsamplesCount).HasComment(
+                "Количество голосовых соединений с низкой разборчивостью (Negative MOS samples Count, MOS POLQA<2,6)[%]");
+            entity.Property(e => e.TotalConnectionAttempts)
+                .HasComment("Общее количество попыток соединений с сервером передачи данных HTTP (Загрузка файлов)");
             entity.Property(e => e.TotalMessagesSent).HasComment("Общее количество отправленных SMS - сообщений");
-            entity.Property(e => e.TotalTestSessions).HasComment("Общее количество тестовых сессий по протоколу HTTP (Web-browsing)");
-            entity.Property(e => e.TotalTestVoiceConnections).HasComment("Общее количество тестовых голосовых соединений ");
-            entity.Property(e => e.TotalVoiceSequences).HasComment("Общее количество голосовых последовательностей в оцениваемых соединениях (POLQA) ");
+            entity.Property(e => e.TotalTestSessions)
+                .HasComment("Общее количество тестовых сессий по протоколу HTTP (Web-browsing)");
+            entity.Property(e => e.TotalTestVoiceConnections)
+                .HasComment("Общее количество тестовых голосовых соединений ");
+            entity.Property(e => e.TotalVoiceSequences)
+                .HasComment("Общее количество голосовых последовательностей в оцениваемых соединениях (POLQA) ");
 
             entity.HasOne(d => d.MeasureGroup).WithOne(p => p.ReferenceInfoMetric)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -122,10 +119,12 @@ public partial class TopazContext : DbContext
             entity.HasKey(e => e.MeasureGroupId).HasName("PRIMARY");
 
             entity.Property(e => e.MeasureGroupId).ValueGeneratedNever();
-            entity.Property(e => e.NegativeMOSsamplesRatio).HasComment("Доля голосовых соединений с низкой разборчивостью речи");
+            entity.Property(e => e.NegativeMOSsamplesRatio)
+                .HasComment("Доля голосовых соединений с низкой разборчивостью речи");
             entity.Property(e => e.SpeechQualityCallBasis).HasComment("Средняя разборчивость речи на соединение");
             entity.Property(e => e.VoiceServiceCutOfffRatio).HasComment("Доля обрывов голосовых соединений ");
-            entity.Property(e => e.VoiceServiceNonAcessibility).HasComment("Доля неуспешных попыток установления голосового соединения ");
+            entity.Property(e => e.VoiceServiceNonAcessibility)
+                .HasComment("Доля неуспешных попыток установления голосового соединения ");
 
             entity.HasOne(d => d.MeasureGroup).WithOne(p => p.VoiceConnectionMetric)
                 .OnDelete(DeleteBehavior.ClientSetNull)
