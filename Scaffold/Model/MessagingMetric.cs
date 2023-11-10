@@ -6,19 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Scaffold.Model;
 
-[Index("MeasureId", Name = "fk_MessagingMetric_Measure1_idx", IsUnique = true)]
+[Index("MeasureGroupId", Name = "fk_MessagingMetric_MeasureGroup1_idx", IsUnique = true)]
 public partial class MessagingMetric
 {
-    /// <summary>
-    /// Идентификатор качества услуг подвижной радиотелефонной связи в части передачи коротких текстовых сообщений
-    /// </summary>
     [Key]
-    public int id { get; set; }
-
-    /// <summary>
-    /// Внешний идентификатор измерения
-    /// </summary>
-    public int MeasureId { get; set; }
+    public int MeasureGroupId { get; set; }
 
     /// <summary>
     /// Доля недоставленных SMS сообщений [%]
@@ -30,7 +22,7 @@ public partial class MessagingMetric
     /// </summary>
     public float AverageMessageDeliveryTime { get; set; }
 
-    [ForeignKey("MeasureId")]
+    [ForeignKey("MeasureGroupId")]
     [InverseProperty("MessagingMetric")]
-    public virtual Measure Measure { get; set; } = null!;
+    public virtual MeasureGroup MeasureGroup { get; set; } = null!;
 }

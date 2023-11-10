@@ -43,17 +43,8 @@ public partial class Measure
     public string Equipment { get; set; } = null!;
 
     [InverseProperty("Measure")]
-    public virtual HttpTransmittingMetric? HttpTransmittingMetric { get; set; }
+    public virtual ICollection<MeasureGroup> MeasureGroup { get; } = new List<MeasureGroup>();
 
     [InverseProperty("Measure")]
     public virtual MeasureInfo? MeasureInfo { get; set; }
-
-    [InverseProperty("Measure")]
-    public virtual MessagingMetric? MessagingMetric { get; set; }
-
-    [InverseProperty("Measure")]
-    public virtual ReferenceInfo? ReferenceInfo { get; set; }
-
-    [InverseProperty("Measure")]
-    public virtual VoiceConnectionMetric? VoiceConnectionMetric { get; set; }
 }
