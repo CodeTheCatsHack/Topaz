@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Scaffold.Model;
 
-public class Measure
+public partial class Measure
 {
     /// <summary>
     ///     Идентификатор измерения

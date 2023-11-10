@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Scaffold.Model;
 
 [Index("MeasureId", Name = "fk_MessagingMetric_Measure1_idx", IsUnique = true)]
-public class MessagingMetric
+public partial class MessagingMetric
 {
     /// <summary>
     ///     Идентификатор качества услуг подвижной радиотелефонной связи в части передачи коротких текстовых сообщений

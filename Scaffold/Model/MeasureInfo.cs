@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Scaffold.Model;
 
 [Index("MeasureId", Name = "fk_MeasureInfo_Measure1_idx")]
-public class MeasureInfo
+public partial class MeasureInfo
 {
     [Key] public int MeasureId { get; set; }
 

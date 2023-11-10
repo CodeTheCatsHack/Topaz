@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Scaffold.Model;
 
 [Index("MeasureId", Name = "fk_ReferenceInfo_Measure1_idx", IsUnique = true)]
-public class ReferenceInfo
+public partial class ReferenceInfo
 {
     /// <summary>
     ///     Идентификатор справочной информации

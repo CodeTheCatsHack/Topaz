@@ -3,12 +3,8 @@ using Scaffold.Model;
 
 namespace Scaffold.Context;
 
-public partial class TopazContext : DbContext
+public partial class TopazContext
 {
-    public TopazContext()
-    {
-    }
-
     public TopazContext(DbContextOptions<TopazContext> options)
         : base(options)
     {
@@ -25,10 +21,6 @@ public partial class TopazContext : DbContext
     public virtual DbSet<ReferenceInfo> ReferenceInfo { get; set; }
 
     public virtual DbSet<VoiceConnectionMetric> VoiceConnectionMetric { get; set; }
-
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseMySql("server=twenkey.ru;port=25010;database=db_topaz;uid=topazuser;pwd=topazpw", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.2.0-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

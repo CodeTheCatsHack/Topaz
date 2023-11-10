@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Scaffold.Model;
 
 [Index("MeasureId", Name = "fk_VoiceConnectionMetric_Measure1_idx", IsUnique = true)]
-public class VoiceConnectionMetric
+public partial class VoiceConnectionMetric
 {
     /// <summary>
     ///     Идентификатор качества услуг подвижной радиотелефонной связи в части голосового соединения

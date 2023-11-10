@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Scaffold.Model;
 
 [Index("MeasureId", Name = "fk_HttpTransmittingMetric_Measure1_idx", IsUnique = true)]
-public class HttpTransmittingMetric
+public partial class HttpTransmittingMetric
 {
     /// <summary>
     ///     Показатели качества услуг связи по передаче данных, за исключением услуг связи по передаче данных для целей
