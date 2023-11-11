@@ -26,4 +26,10 @@
     <Folder Include="wwwroot\file\"/>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Pages\TABLES.css">
+      <DependentUpon>TABLES.razor</DependentUpon>
+    </None>
+  </ItemGroup>
+
 </Project>
