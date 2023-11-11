@@ -1,6 +1,6 @@
-﻿using System.Text.RegularExpressions;
-using OfficeOpenXml;
+﻿using OfficeOpenXml;
 using Scaffold.Model;
+using System.Text.RegularExpressions;
 
 namespace Parser
 {
@@ -22,9 +22,26 @@ namespace Parser
         /// <param name="filepath">путь до файла</param>
         public Interpreter(string filepath)
         {
-            Filepath = filepath;
-            _package = new ExcelPackage(filepath);
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            if (!File.Exists(filepath))
+            {
+                throw new FileNotFoundException("file not found: " + filepath);
+            }
+            else if (Path.GetExtension(filepath) == ".xlsx")
+            {
+                throw new Exceptions.FileWrongExtensionException(Path.GetExtension(filepath), ".xlsx");
+            }
+
+            try
+            {
+
+                Filepath = filepath;
+                _package = new ExcelPackage(filepath);
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            }
+            catch (Exception ex)
+            {
+                throw new Exceptions.ConstructorException(ex);
+            }
         }
 
         private ExcelWorksheet _ws => _package.Workbook.Worksheets.First();
@@ -139,6 +156,28 @@ namespace Parser
             catch
             {
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Кастомые ошибки
+        /// </summary>
+        public static class Exceptions
+        {
+            /// <summary>
+            /// Представляет ошибку неверного расширения файла
+            /// </summary>
+            public class FileWrongExtensionException : Exception
+            {
+                public FileWrongExtensionException(string extActual, string extExpected) : base($"Получен неправильный формат файла: {extActual}, ожидался: {extExpected}") { }
+            }
+
+            /// <summary>
+            /// Представляет ошибку конструктора
+            /// </summary>
+            public class ConstructorException : Exception
+            {
+                public ConstructorException(Exception? inner) : base("Ошибка инициализации класса. См. внутреннее исключение", inner) { }
             }
         }
     }
