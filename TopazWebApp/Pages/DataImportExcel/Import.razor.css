@@ -47,12 +47,6 @@ input[type=text]::placeholder{
     border-radius: 20px;
 }
 
-table{
-    border: 11px solid aqua;
-    border-radius: 20px;
-    height: 500px;
-}
-
 .filters{
     display: flex;
     flex-direction: row;
