@@ -3,10 +3,14 @@ using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
 using Scaffold;
 using Serilog;
+using Topaz.Data.Service;
+using static Scaffold.CoreDiConfiguration;
 
 try
 {
     var builder = WebApplication.CreateBuilder(args);
+
+    builder.Host.UseSerilog(ConfigurationSerilog);
 
     Log.Information("Загрузка Core приложения...");
     builder.Services.AddCoreDi(builder.Configuration);
@@ -19,6 +23,9 @@ try
         .AddBootstrap5Providers()
         .AddFontAwesomeIcons()
         .AddBootstrap5Components();
+
+    Log.Information("Загрузка сервисов Blazor Server...");
+    builder.Services.AddScoped<ServiceInfoMeasure>();
 
     builder.Services.AddHttpContextAccessor();
 

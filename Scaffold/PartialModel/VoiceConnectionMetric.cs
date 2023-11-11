@@ -1,5 +1,5 @@
 ﻿namespace Scaffold.Model;
 
-public partial class VoiceConnectionMetric
+public partial class VoiceConnectionMetric : IModelContext
 {
 }

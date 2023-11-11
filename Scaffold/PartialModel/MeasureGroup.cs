@@ -1,5 +1,5 @@
 ﻿namespace Scaffold.Model;
 
-public partial class MeasureGroup
+public partial class MeasureGroup : IModelContext
 {
 }
