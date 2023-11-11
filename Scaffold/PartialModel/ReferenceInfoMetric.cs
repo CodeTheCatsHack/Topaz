@@ -1,5 +1,5 @@
 ﻿namespace Scaffold.Model;
 
-public partial class ReferenceInfoMetric
+public partial class ReferenceInfoMetric : IModelContext
 {
 }
