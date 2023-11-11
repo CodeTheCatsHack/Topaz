@@ -4,6 +4,9 @@ using Scaffold.Model;
 
 namespace Parser
 {
+    /// <summary>
+    /// Интерпритатор Microsoft Excel файлов
+    /// </summary>
     public class Interpreter : IDisposable
     {
         private readonly ExcelPackage _package;
@@ -13,6 +16,10 @@ namespace Parser
         {
         }
 
+        /// <summary>
+        /// Конструктор класса
+        /// </summary>
+        /// <param name="filepath">путь до файла</param>
         public Interpreter(string filepath)
         {
             Filepath = filepath;
@@ -27,6 +34,11 @@ namespace Parser
             _package.Dispose();
         }
 
+        /// <summary>
+        /// Получить информацию о MeasureInfo
+        /// </summary>
+        /// <param name="measure">родительский элемент</param>
+        /// <returns></returns>
         public MeasureInfo? ParseMeasureInfo(ref Measure measure)
         {
             try
@@ -47,6 +59,10 @@ namespace Parser
             }
         }
 
+        /// <summary>
+        /// Получить информацию о Measure
+        /// </summary>
+        /// <returns></returns>
         public Measure? ParseMeasure()
         {
             Measure measure = new Measure();
@@ -76,6 +92,12 @@ namespace Parser
             return measure;
         }
 
+        /// <summary>
+        /// Спарсить MeasureGroup относительно колонки
+        /// </summary>
+        /// <param name="measure">родительский элемент</param>
+        /// <param name="column">номер колонки Excel</param>
+        /// <returns></returns>
         private MeasureGroup? ParseMeasureGroup(ref Measure measure, int column)
         {
             try
