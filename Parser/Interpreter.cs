@@ -1,20 +1,30 @@
-﻿using OfficeOpenXml;
+﻿using System.Text.RegularExpressions;
+using OfficeOpenXml;
 using Scaffold.Model;
-using System.Text.RegularExpressions;
 
 namespace Parser
 {
     public class Interpreter : IDisposable
     {
-        public string Filepath { get; }
-        ExcelPackage _package;
-        ExcelWorksheet _ws { get => _package.Workbook.Worksheets.First(); }
+        private readonly ExcelPackage _package;
+        public readonly string Filepath;
+
+        public Interpreter()
+        {
+        }
 
         public Interpreter(string filepath)
         {
             Filepath = filepath;
             _package = new ExcelPackage(filepath);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        }
+
+        private ExcelWorksheet _ws => _package.Workbook.Worksheets.First();
+
+        public void Dispose()
+        {
+            _package.Dispose();
         }
 
         public MeasureInfo? ParseMeasureInfo(ref Measure measure)
@@ -59,6 +69,7 @@ namespace Parser
                 {
                     break;
                 }
+
                 measure.MeasureGroup.Add(group);
             }
 
@@ -107,11 +118,6 @@ namespace Parser
             {
                 return null;
             }
-        }
-
-        public void Dispose()
-        {
-            _package.Dispose();
         }
     }
 }

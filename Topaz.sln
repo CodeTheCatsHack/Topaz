@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Parser", "Parser\Parser.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scaffold", "Scaffold\Scaffold.csproj", "{C049F81B-6080-4CCC-96B0-9EB3DB7A143B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Topaz", "TopazWebApp\Topaz.csproj", "{C01D95CA-E639-407E-8FE6-A82ACDCDA5D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{C049F81B-6080-4CCC-96B0-9EB3DB7A143B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C049F81B-6080-4CCC-96B0-9EB3DB7A143B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C049F81B-6080-4CCC-96B0-9EB3DB7A143B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C01D95CA-E639-407E-8FE6-A82ACDCDA5D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C01D95CA-E639-407E-8FE6-A82ACDCDA5D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C01D95CA-E639-407E-8FE6-A82ACDCDA5D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C01D95CA-E639-407E-8FE6-A82ACDCDA5D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
