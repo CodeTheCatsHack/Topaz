@@ -16,8 +16,9 @@ input{
 
 header{
     height: auto;
+    width: 100%;
     display: flex;
-    position: relative;
+    position: fixed;
     background: #284A9D;
     flex-direction: row;
     padding: 0 5%;
@@ -69,6 +70,12 @@ header{
 
 .nav.mobile{
     display: none;
+    height: auto;
+    position: fixed;
+    bottom: 0;
+    background: #284A9D;
+    width: 100%;
+    z-index: 10;
 }
 
 @media screen and (max-width: 768px){
@@ -77,13 +84,8 @@ header{
     }
     
     .nav.mobile{
-        height: auto;
-        position: fixed;
         display: flex;
-        bottom: 0;
-        background: #284A9D;
-        width: 100%;
-        z-index: 2;
+        
     }
     
     .actions{
