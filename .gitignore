@@ -366,6 +366,7 @@ FodyWeavers.xsd
 
 # [custom]
 /TopazWebApp/appsettings*
+/TopazWebApp/wwwroot/file/
 /DebugProj*/
 .idea
 log*.*
