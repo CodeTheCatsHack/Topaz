@@ -2,6 +2,7 @@
 using Blazorise;
 using Blazorise.DataGrid;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.FileProviders;
 using Scaffold.Model;
 using Topaz.Data.Service;
 
@@ -9,24 +10,13 @@ namespace Topaz.Data;
 
 public class ImportDataComponent : ComponentBase
 {
-    public enum ViewData
-    {
-        Measure,
-        MeasureInfo,
-        ReferanceInfo,
-        MessagingMetrics,
-        ReferanceMetricsInfo,
-        HttpTransmittingMetric,
-        VoiceConnectionMetric
-    }
-
-    protected DataGrid<Measure> _dataGrid;
+    protected DataGrid<Measure> DataGridView;
 
     [Inject] public ServiceInfoMeasure ServiceInfoMeasure { get; set; }
     [Inject] private IWebHostEnvironment HostingEnvironment { get; set; }
 
-    public ViewData ViewDataStatus { get; set; } = ViewData.Measure;
-
+    protected ViewData ViewDataStatus { get; set; } = ViewData.Measure;
+    protected Measure SelectedMeasure { get; set; }
     protected ObservableCollection<Measure> DataViewMeasure { get; set; } = new();
     protected ObservableCollection<MeasureInfo> DataViewMeasureInfos { get; set; } = new();
     protected ObservableCollection<MessagingMetric> DataViewMessagingMetrics { get; set; } = new();
@@ -38,179 +28,70 @@ public class ImportDataComponent : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
+        DataViewMeasure = ServiceInfoMeasure.Measures;
+
+        foreach (var measure in ServiceInfoMeasure.Measures)
+        {
+            var group = measure.MeasureGroup.First();
+            if (group.ReferenceInfoMetric != null)
+                DataViewReferenceInfos.Add(group.ReferenceInfoMetric);
+        }
+
+        foreach (var measure in ServiceInfoMeasure.Measures)
+        {
+            var group = measure.MeasureGroup.First();
+            if (group.HttpTransmittingMetric != null)
+                DataViewHttpTransmittingMetrics.Add(group.HttpTransmittingMetric);
+        }
+
+        foreach (var measure in ServiceInfoMeasure.Measures)
+        {
+            var group = measure.MeasureGroup.First();
+            if (group.VoiceConnectionMetric != null)
+                DataViewVoiceConnectionMetrics.Add(group.VoiceConnectionMetric);
+        }
+
+        foreach (var measure in ServiceInfoMeasure.Measures)
+        {
+            var group = measure.MeasureGroup.First();
+            if (group.MessagingMetric != null)
+                DataViewMessagingMetrics.Add(group.MessagingMetric);
+        }
+
+        foreach (var measure in ServiceInfoMeasure.Measures)
+            if (measure.MeasureInfo != null)
+                DataViewMeasureInfos.Add(measure.MeasureInfo);
+
         await base.OnInitializedAsync();
     }
 
-    public async Task OnReadData(DataGridReadDataEventArgs<Measure> e)
+    #region Валидация
+
+    protected Blazorise.Validations Validator;
+
+    protected async Task Validation()
     {
-        if (!e.CancellationToken.IsCancellationRequested)
+        if (await Validator.ValidateAll())
         {
-            List<Measure>? response;
-
-            if (e.ReadDataMode is DataGridReadDataMode.Virtualize)
-                response = ServiceInfoMeasure.Measures.Skip(e.VirtualizeOffset).Take(e.VirtualizeCount).ToList();
-            else if (e.ReadDataMode is DataGridReadDataMode.Paging)
-                response = ServiceInfoMeasure.Measures.Skip((e.Page - 1) * e.PageSize).Take(e.PageSize).ToList();
-            else
-                throw new Exception("Unhandled ReadDataMode");
-
-            if (!e.CancellationToken.IsCancellationRequested)
-            {
-                Total = ServiceInfoMeasure.Measures.Count;
-                DataViewMeasure = new ObservableCollection<Measure>(response);
-            }
+        }
+        else
+        {
         }
     }
 
-    public async Task OnReadData(DataGridReadDataEventArgs<MeasureInfo> e)
+    #endregion
+
+    #region Навигационные кнопки
+
+    protected enum ViewData
     {
-        if (!e.CancellationToken.IsCancellationRequested)
-        {
-            List<MeasureInfo> response = new();
-
-            foreach (var measure in ServiceInfoMeasure.Measures)
-                if (measure.MeasureInfo != null)
-                    response.Add(measure.MeasureInfo);
-            // this can be call to anything, in this case we're calling a fictional api
-            //var response = await Http.GetJsonAsync<Employee[]>( $"some-api/employees?page={e.Page}&pageSize={e.PageSize}" );
-            if (e.ReadDataMode is DataGridReadDataMode.Virtualize)
-                response = response.Skip(e.VirtualizeOffset).Take(e.VirtualizeCount).ToList();
-            else if (e.ReadDataMode is DataGridReadDataMode.Paging)
-                response = response.Skip((e.Page - 1) * e.PageSize).Take(e.PageSize).ToList();
-            else
-                throw new Exception("Unhandled ReadDataMode");
-
-            if (!e.CancellationToken.IsCancellationRequested)
-            {
-                Total = ServiceInfoMeasure.Measures.Count;
-                DataViewMeasureInfos =
-                    new ObservableCollection<MeasureInfo>(response); // an actual data for the current page
-            }
-        }
-    }
-
-    public async Task OnReadData(DataGridReadDataEventArgs<MessagingMetric> e)
-    {
-        if (!e.CancellationToken.IsCancellationRequested)
-        {
-            List<MessagingMetric> response = new();
-
-            foreach (var measure in ServiceInfoMeasure.Measures)
-            {
-                var group = measure.MeasureGroup.First();
-                if (group.MessagingMetric != null)
-                    response.Add(group.MessagingMetric);
-            }
-
-            // this can be call to anything, in this case we're calling a fictional api
-            //var response = await Http.GetJsonAsync<Employee[]>( $"some-api/employees?page={e.Page}&pageSize={e.PageSize}" );
-            if (e.ReadDataMode is DataGridReadDataMode.Virtualize)
-                response = response.Skip(e.VirtualizeOffset).Take(e.VirtualizeCount).ToList();
-            else if (e.ReadDataMode is DataGridReadDataMode.Paging)
-                response = response.Skip((e.Page - 1) * e.PageSize).Take(e.PageSize).ToList();
-            else
-                throw new Exception("Unhandled ReadDataMode");
-
-            if (!e.CancellationToken.IsCancellationRequested)
-            {
-                Total = ServiceInfoMeasure.Measures.Count;
-                DataViewMessagingMetrics =
-                    new ObservableCollection<MessagingMetric>(response); // an actual data for the current page
-            }
-        }
-    }
-
-    public async Task OnReadData(DataGridReadDataEventArgs<ReferenceInfoMetric> e)
-    {
-        if (!e.CancellationToken.IsCancellationRequested)
-        {
-            List<ReferenceInfoMetric> response = new();
-
-            foreach (var measure in ServiceInfoMeasure.Measures)
-            {
-                var group = measure.MeasureGroup.First();
-                if (group.ReferenceInfoMetric != null)
-                    response.Add(group.ReferenceInfoMetric);
-            }
-
-            // this can be call to anything, in this case we're calling a fictional api
-            //var response = await Http.GetJsonAsync<Employee[]>( $"some-api/employees?page={e.Page}&pageSize={e.PageSize}" );
-            if (e.ReadDataMode is DataGridReadDataMode.Virtualize)
-                response = response.Skip(e.VirtualizeOffset).Take(e.VirtualizeCount).ToList();
-            else if (e.ReadDataMode is DataGridReadDataMode.Paging)
-                response = response.Skip((e.Page - 1) * e.PageSize).Take(e.PageSize).ToList();
-            else
-                throw new Exception("Unhandled ReadDataMode");
-
-            if (!e.CancellationToken.IsCancellationRequested)
-            {
-                Total = ServiceInfoMeasure.Measures.Count;
-                DataViewReferenceInfos =
-                    new ObservableCollection<ReferenceInfoMetric>(response); // an actual data for the current page
-            }
-        }
-    }
-
-    public async Task OnReadData(DataGridReadDataEventArgs<VoiceConnectionMetric> e)
-    {
-        if (!e.CancellationToken.IsCancellationRequested)
-        {
-            List<VoiceConnectionMetric> response = new();
-
-            foreach (var measure in ServiceInfoMeasure.Measures)
-            {
-                var group = measure.MeasureGroup.First();
-                if (group.VoiceConnectionMetric != null)
-                    response.Add(group.VoiceConnectionMetric);
-            }
-
-            // this can be call to anything, in this case we're calling a fictional api
-            //var response = await Http.GetJsonAsync<Employee[]>( $"some-api/employees?page={e.Page}&pageSize={e.PageSize}" );
-            if (e.ReadDataMode is DataGridReadDataMode.Virtualize)
-                response = response.Skip(e.VirtualizeOffset).Take(e.VirtualizeCount).ToList();
-            else if (e.ReadDataMode is DataGridReadDataMode.Paging)
-                response = response.Skip((e.Page - 1) * e.PageSize).Take(e.PageSize).ToList();
-            else
-                throw new Exception("Unhandled ReadDataMode");
-
-            if (!e.CancellationToken.IsCancellationRequested)
-            {
-                Total = ServiceInfoMeasure.Measures.Count;
-                DataViewVoiceConnectionMetrics =
-                    new ObservableCollection<VoiceConnectionMetric>(response); // an actual data for the current page
-            }
-        }
-    }
-
-    public async Task OnReadData(DataGridReadDataEventArgs<HttpTransmittingMetric> e)
-    {
-        if (!e.CancellationToken.IsCancellationRequested)
-        {
-            List<HttpTransmittingMetric> response = new();
-
-            foreach (var measure in ServiceInfoMeasure.Measures)
-            {
-                var group = measure.MeasureGroup.First();
-                if (group.HttpTransmittingMetric != null)
-                    response.Add(group.HttpTransmittingMetric);
-            }
-
-            // this can be call to anything, in this case we're calling a fictional api
-            //var response = await Http.GetJsonAsync<Employee[]>( $"some-api/employees?page={e.Page}&pageSize={e.PageSize}" );
-            if (e.ReadDataMode is DataGridReadDataMode.Virtualize)
-                response = response.Skip(e.VirtualizeOffset).Take(e.VirtualizeCount).ToList();
-            else if (e.ReadDataMode is DataGridReadDataMode.Paging)
-                response = response.Skip((e.Page - 1) * e.PageSize).Take(e.PageSize).ToList();
-            else
-                throw new Exception("Unhandled ReadDataMode");
-
-            if (!e.CancellationToken.IsCancellationRequested)
-            {
-                Total = ServiceInfoMeasure.Measures.Count;
-                DataViewHttpTransmittingMetrics =
-                    new ObservableCollection<HttpTransmittingMetric>(response); // an actual data for the current page
-            }
-        }
+        Measure,
+        MeasureInfo,
+        ReferanceInfo,
+        MessagingMetrics,
+        ReferanceMetricsInfo,
+        HttpTransmittingMetric,
+        VoiceConnectionMetric
     }
 
     protected void OnMeasureClick()
@@ -243,6 +124,8 @@ public class ImportDataComponent : ComponentBase
         ViewDataStatus = ViewData.ReferanceMetricsInfo;
     }
 
+    #endregion
+
     #region Работа с файловой системой
 
     protected List<IFileEntry> selectedFiles = new();
@@ -256,6 +139,10 @@ public class ImportDataComponent : ComponentBase
     protected async Task UploadFiles()
     {
         var filesToUpload = new List<IFileEntry>(selectedFiles);
+        var wwwrootFileProvider = new PhysicalFileProvider(HostingEnvironment.WebRootPath);
+        var directoryContents = wwwrootFileProvider.GetDirectoryContents("file");
+
+        if (!directoryContents.Exists) Directory.CreateDirectory(Path.Combine(HostingEnvironment.WebRootPath, "file"));
 
         foreach (var file in filesToUpload)
         {
