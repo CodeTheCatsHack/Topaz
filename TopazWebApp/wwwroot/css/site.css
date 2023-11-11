@@ -14,9 +14,12 @@ input{
     cursor: pointer;
 }
 
-main{
-    display: flex;
-    flex-direction: column;
+html{
+    min-height: 100vh;
+}
+
+body{
+    height: 100%;
 }
 
 h1, .h1{
@@ -28,4 +31,18 @@ h1, .h1{
 
 h1:focus, .h1:focus{
     outline: none;
+}
+
+@media screen and (max-width: 768px){
+    main{
+        padding: 24px 48px 118px 144px;
+    }
+    
+    .content{
+        margin-top: 16px;
+    }
+
+    h1, .h1{
+        font-size: 35px;
+    }
 }
