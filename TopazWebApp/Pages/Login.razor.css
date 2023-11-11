@@ -1,0 +1,68 @@
+main{
+    justify-content: center !important;
+}
+
+.logo{
+    margin-bottom: 27px;
+}
+
+.login-wrap{
+    max-width: 550px;
+    max-height: 600px;
+    width: 100%;
+    height: 100%;
+    align-self: center;
+    background-color: rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    padding: 50px 100px;
+}
+
+.title{
+    text-align: center;
+    font-size: 48px;
+    font-weight: 800;
+    color: rgba(88, 88, 88, 1);
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    margin-top: 45px;
+    padding: 0 7px;
+}
+
+.login,
+.password{
+    height: 31px;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 400;
+    color: #000000;
+    background-color: #FFFFFF;
+    padding: 0 7px;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.login::placeholder,
+.password::placeholder{
+    color: rgba(175, 175, 175, 1);
+}
+
+.login{
+    
+}
+
+.password{
+    margin-top: 11px;
+}
+
+.forgot{
+    display: flex;
+    justify-content: flex-end;
+    color: rgba(88, 88, 88, 1);
+    padding: 0 0 2px 0;
+    margin-top: 11px;
+}
