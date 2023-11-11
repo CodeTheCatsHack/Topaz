@@ -1,11 +1,13 @@
 .page{
     height: calc(100% - 70px);
-    background: linear-gradient(rgba(116, 116, 116, 0.249), rgba(116, 116, 116, 0));
 }
 
 main{
-    padding: 48px 144px;
     display: flex;
+    height: 100vh;
+    background: linear-gradient(rgba(116, 116, 116, 0.249), rgba(238, 248, 255, 1));
+    flex-direction: column;
+    padding: 140px 144px;
 }
 
 h1, .h1{
@@ -15,12 +17,3 @@ h1, .h1{
     margin-bottom: 0;
 }
 
-@media screen and (max-width: 768px){
-    main{
-        padding: 5px;
-    }
-    
-    h1, .h1{
-        font-size: 35px;
-    }
-}
