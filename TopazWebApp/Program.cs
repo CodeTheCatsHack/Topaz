@@ -1,8 +1,11 @@
 using Blazorise;
 using Blazorise.Bootstrap5;
+using Blazorise.FluentValidation;
 using Blazorise.Icons.FontAwesome;
+using FluentValidation;
 using Scaffold;
 using Serilog;
+using Topaz;
 using Topaz.Data.Service;
 using static Scaffold.CoreDiConfiguration;
 
@@ -22,7 +25,10 @@ try
         .AddBlazorise(options => { options.Immediate = true; })
         .AddBootstrap5Providers()
         .AddFontAwesomeIcons()
-        .AddBootstrap5Components();
+        .AddBootstrap5Components()
+        .AddBlazoriseFluentValidation();
+
+    builder.Services.AddValidatorsFromAssembly(typeof(App).Assembly);
 
     Log.Information("Загрузка сервисов Blazor Server...");
     builder.Services.AddScoped<ServiceInfoMeasure>();
