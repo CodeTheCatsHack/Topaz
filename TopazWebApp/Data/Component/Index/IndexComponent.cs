@@ -73,6 +73,11 @@ public class IndexComponent : ComponentBase
         Measure = await ServiceDataDataBase.GetDataMeasureById(measureId);
     }
 
+    protected async Task ExportFileByMeasure(Measure measure)
+    {
+        
+    }
+
     protected override async Task OnInitializedAsync()
     {
         Measure = await ServiceDataDataBase.GetDataMeasureById(measureId);
@@ -80,6 +85,5 @@ public class IndexComponent : ComponentBase
 
         await base.OnInitializedAsync();
         await HandleRedraw();
-
     }
 }
