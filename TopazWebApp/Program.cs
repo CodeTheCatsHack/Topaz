@@ -45,11 +45,14 @@ try
         .SetIsOriginAllowed(_ => true)
         .AllowCredentials());
 
-    app.UseExceptionHandler("/error");
+    if (!app.Environment.IsDevelopment())
+    {
+        app.UseExceptionHandler("/error");
 
-    Log.Information("Настройка Redirect HTTP на HTTPS...");
-    app.UseHsts()
-        .UseHttpsRedirection();
+        Log.Information("Настройка Redirect HTTP на HTTPS...");
+        app.UseHsts()
+            .UseHttpsRedirection();
+    }    
 
     Log.Information("Надстройка статических файлов...");
     app.UseDefaultFiles()
