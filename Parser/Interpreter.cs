@@ -93,7 +93,6 @@ namespace Parser
 
             int colIndex = 3;
             MeasureGroup? group = null;
-
             while (true)
             {
                 group = ParseMeasureGroup(ref measure, colIndex++);
@@ -118,7 +117,7 @@ namespace Parser
         {
             try
             {
-                return new MeasureGroup
+                var measureGroup = new MeasureGroup
                 {
                     Measure = measure,
                     MeasureSubject = _ws.GetValue<string>(18, column),
@@ -151,6 +150,11 @@ namespace Parser
                         TotalTestSessions = _ws.GetValue<int>(37, column)
                     }
                 };
+                measureGroup.VoiceConnectionMetric.MeasureGroup = measureGroup;
+                measureGroup.MessagingMetric.MeasureGroup = measureGroup;
+                measureGroup.HttpTransmittingMetric.MeasureGroup = measureGroup;
+                measureGroup.ReferenceInfoMetric.MeasureGroup = measureGroup;
+                return measureGroup;
             }
             catch
             {

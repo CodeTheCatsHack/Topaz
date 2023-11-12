@@ -18,22 +18,22 @@
             @if (Measures.Count != 0)
             {
                 <div class="nav-item px-3">
-                    <Button @onclick="() => OnNavImport(ViewData.Measure)">Информацию по филиалу</Button>
+                    <Button Clicked="OnMeasureClick">Информацию по филиалам</Button>
                 </div>
                 <div class="nav-item px-3">
-                    <Button @onclick="() => OnNavImport(ViewData.MeasureInfo)">Подробная информация по протоколу филиала</Button>
+                    <Button Clicked="OnMeasureInfoClick">Подробная информация по филиалам</Button>
                 </div>
                 <div class="nav-item px-3">
-                    <Button @onclick="() => OnNavImport(ViewData.VoiceConnectionMetric)">Показатели голосового соединения</Button>
+                    <Button Clicked="OnVoiceConnectionMetricClick">Показатели голосового соединения</Button>
                 </div>
                 <div class="nav-item px-3">
-                    <Button @onclick="() => OnNavImport(ViewData.MessagingMetrics)">Показатели передачи текстовых сообщений</Button>
+                    <Button Clicked="OnMessagingMetricClick">Показатели передачи текстовых сообщений</Button>
                 </div>
                 <div class="nav-item px-3">
-                    <Button @onclick="() => OnNavImport(ViewData.HttpTransmittingMetric)">Показатели по передаче данных(за исключением услуг связи по передаче данных для целей передачи голосовой информации)</Button>
+                    <Button Clicked="OnHttpTransmittingMetricClick">Показатели по передаче данных(за исключением услуг связи по передаче данных для целей передачи голосовой информации)</Button>
                 </div>
                 <div class="nav-item px-3">
-                    <Button @onclick="() => OnNavImport(ViewData.ReferanceInfo)">Справочная информация</Button>
+                    <Button Clicked="OnReferenceInfoMetricClick">Справочная информация</Button>
                 </div>
             }
             else
@@ -66,13 +66,22 @@
                       SortMode="DataGridSortMode.Multiple"
                       UseValidation
                       ShowValidationsSummary="false">
-                <DataGridColumn Field="@nameof(MeasureInfo.Measure.FileGuid)" Caption="Виртуальный Id(Протокол)" Readonly="true"/>
-                <DataGridColumn Field="@nameof(MeasureInfo.Protocol)" Caption="Протокол" Editable/>
-                <DataGridColumn Field="@nameof(MeasureInfo.CompanyFullname)" Caption="Полное наименование компании" Editable/>
-                <DataGridColumn Field="@nameof(MeasureInfo.CompanyAbbr)" Caption="Абривиатура" Editable/>
-                <DataGridColumn Field="@nameof(MeasureInfo.CompanyName)" Caption="Название" Editable/>
-                <DataGridColumn Field="@nameof(MeasureInfo.CompanyType)" Caption="Федеральное значение" Editable/>
-                <DataGridCommandColumn/>
+                <DataGridColumns>
+                    <DataGridColumn Field="@nameof(MeasureInfo.Protocol)" Caption="Протокол" Editable/>
+                    <DataGridColumn Field="@nameof(MeasureInfo.CompanyFullname)" Caption="Полное наименование компании" Editable/>
+                    <DataGridColumn Field="@nameof(MeasureInfo.CompanyAbbr)" Caption="Абривиатура" Editable/>
+                    <DataGridColumn Field="@nameof(MeasureInfo.CompanyName)" Caption="Название" Editable/>
+                    <DataGridColumn Field="@nameof(MeasureInfo.CompanyType)" Caption="Федеральное значение" Editable/>
+                    <DataGridCommandColumn/>
+                </DataGridColumns>
+                <DetailRowTemplate>
+                    @{
+                        var measure = context.Measure;
+                        <Text>
+                            @measure.FileGuid
+                        </Text>
+                    }
+                </DetailRowTemplate>
             </DataGrid>
             break;
         case ViewData.Measure:
@@ -118,14 +127,23 @@
                       SortMode="DataGridSortMode.Multiple"
                       UseValidation
                       ShowValidationsSummary="false">
-                <DataGridColumn Field="@nameof(ReferenceInfoMetric.MeasureGroup.Measure.FileGuid)" Caption="Виртуальный Id(Протокол)" Readonly="true"/>
-                <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalConnectionAttempts)" Caption="Общее кол-во соединений HTTP" Editable/>
-                <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalVoiceSequences)" Caption="POLQA" Editable/>
-                <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalMessagesSent)" Caption="Общее кол-во отправленных SMS" Editable/>
-                <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalTestSessions)" Caption="Общее кол-во сессий HTTP (Web-browsing)" Editable/>
-                <DataGridColumn Field="@nameof(ReferenceInfoMetric.NegativeMossamplesCount)" Caption="Кол-во соединений с низкой разборчивостью" Editable/>
-                <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalTestVoiceConnections)" Caption="Общее кол-во голосовых соединений" Editable/>
-                <DataGridCommandColumn/>
+                <DataGridColumns>
+                    <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalConnectionAttempts)" Caption="Общее кол-во соединений HTTP" Editable/>
+                    <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalVoiceSequences)" Caption="POLQA" Editable/>
+                    <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalMessagesSent)" Caption="Общее кол-во отправленных SMS" Editable/>
+                    <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalTestSessions)" Caption="Общее кол-во сессий HTTP (Web-browsing)" Editable/>
+                    <DataGridColumn Field="@nameof(ReferenceInfoMetric.NegativeMossamplesCount)" Caption="Кол-во соединений с низкой разборчивостью" Editable/>
+                    <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalTestVoiceConnections)" Caption="Общее кол-во голосовых соединений" Editable/>
+                    <DataGridCommandColumn/>
+                </DataGridColumns>
+                <DetailRowTemplate>
+                    @{
+                        var measure = context.MeasureGroup.Measure;
+                        <Text>
+                            Виртуальный Id(Протокол): @measure.FileGuid
+                        </Text>
+                    }
+                </DetailRowTemplate>
             </DataGrid>
             break;
         case ViewData.MessagingMetrics:
@@ -143,10 +161,19 @@
                       SortMode="DataGridSortMode.Multiple"
                       UseValidation
                       ShowValidationsSummary="false">
-                <DataGridColumn Field="@nameof(MessagingMetric.MeasureGroup.Measure.FileGuid)" Caption="Виртуальный Id(Протокол)" Readonly="true"/>
-                <DataGridColumn Field="@nameof(MessagingMetric.UndeliveredMessagePercentage)" Caption="Доля недоставленных SMS сообщений [%]" Editable="true"/>
-                <DataGridColumn Field="@nameof(MessagingMetric.AverageMessageDeliveryTime)" Caption="Среднее время доставки SMS сообщений [сек]" Editable="true"/>
-                <DataGridCommandColumn/>
+                <DataGridColumns>
+                    <DataGridColumn Field="@nameof(MessagingMetric.UndeliveredMessagePercentage)" Caption="Доля недоставленных SMS сообщений [%]" Editable="true"/>
+                    <DataGridColumn Field="@nameof(MessagingMetric.AverageMessageDeliveryTime)" Caption="Среднее время доставки SMS сообщений [сек]" Editable="true"/>
+                    <DataGridCommandColumn/>
+                </DataGridColumns>
+                <DetailRowTemplate>
+                    @{
+                        var measure = context.MeasureGroup.Measure;
+                        <Text>
+                            Виртуальный Id(Протокол): @measure.FileGuid
+                        </Text>
+                    }
+                </DetailRowTemplate>
             </DataGrid>
             break;
         case ViewData.HttpTransmittingMetric:
@@ -164,12 +191,21 @@
                       SortMode="DataGridSortMode.Multiple"
                       UseValidation
                       ShowValidationsSummary="false">
-                <DataGridColumn Field="@nameof(HttpTransmittingMetric.MeasureGroup.Measure.FileGuid)" Caption="Виртуальный Id(Протокол)" Readonly="true"/>
-                <DataGridColumn Field="@nameof(HttpTransmittingMetric.SessionFailureRatio)" Caption="Доля неуспешных сессий по протоколу HTTP [%]" Editable="true"/>
-                <DataGridColumn Field="@nameof(HttpTransmittingMetric.UlmeanUserDataRate)" Caption="UL Mean User Data Rate [kbit/sec]" Editable="true"/>
-                <DataGridColumn Field="@nameof(HttpTransmittingMetric.DlmeanUserDataRate)" Caption="DL Mean User Data Rate [kbit/sec]" Editable="true"/>
-                <DataGridColumn Field="@nameof(HttpTransmittingMetric.SessionTime)" Caption="Продолжительность успешной сессии [s]" Editable="true"/>
-                <DataGridCommandColumn/>
+                <DataGridColumns>
+                    <DataGridColumn Field="@nameof(HttpTransmittingMetric.SessionFailureRatio)" Caption="Доля неуспешных сессий по протоколу HTTP [%]" Editable="true"/>
+                    <DataGridColumn Field="@nameof(HttpTransmittingMetric.UlmeanUserDataRate)" Caption="UL Mean User Data Rate [kbit/sec]" Editable="true"/>
+                    <DataGridColumn Field="@nameof(HttpTransmittingMetric.DlmeanUserDataRate)" Caption="DL Mean User Data Rate [kbit/sec]" Editable="true"/>
+                    <DataGridColumn Field="@nameof(HttpTransmittingMetric.SessionTime)" Caption="Продолжительность успешной сессии [s]" Editable="true"/>
+                    <DataGridCommandColumn/>
+                </DataGridColumns>
+                <DetailRowTemplate>
+                    @{
+                        var measure = context.MeasureGroup.Measure;
+                        <Text>
+                            Виртуальный Id(Протокол): @measure.FileGuid
+                        </Text>
+                    }
+                </DetailRowTemplate>
             </DataGrid>
             break;
         case ViewData.VoiceConnectionMetric:
@@ -187,12 +223,21 @@
                       SortMode="DataGridSortMode.Multiple"
                       UseValidation
                       ShowValidationsSummary="false">
-                <DataGridColumn Field="@nameof(VoiceConnectionMetric.MeasureGroup.Measure.FileGuid)" Caption="Виртуальный Id(Протокол)" Readonly="true"/>
-                <DataGridColumn Field="@nameof(VoiceConnectionMetric.VoiceServiceNonAcessibility)" Caption="Доля неуспешных попыток установления голосового соединения" Editable="true"/>
-                <DataGridColumn Field="@nameof(VoiceConnectionMetric.VoiceServiceCutOfffRatio)" Caption="Доля обрывов голосовых соединений" Editable="true"/>
-                <DataGridColumn Field="@nameof(VoiceConnectionMetric.SpeechQualityCallBasis)" Caption="Средняя разборчивость речи на соединение" Editable="true"/>
-                <DataGridColumn Field="@nameof(VoiceConnectionMetric.NegativeMossamplesRatio)" Caption="Доля голосовых соединений с низкой разборчивостью речи" Editable="true"/>
-                <DataGridCommandColumn/>
+                <DataGridColumns>
+                    <DataGridColumn Field="@nameof(VoiceConnectionMetric.VoiceServiceNonAcessibility)" Caption="Доля неуспешных попыток установления голосового соединения" Editable="true"/>
+                    <DataGridColumn Field="@nameof(VoiceConnectionMetric.VoiceServiceCutOfffRatio)" Caption="Доля обрывов голосовых соединений" Editable="true"/>
+                    <DataGridColumn Field="@nameof(VoiceConnectionMetric.SpeechQualityCallBasis)" Caption="Средняя разборчивость речи на соединение" Editable="true"/>
+                    <DataGridColumn Field="@nameof(VoiceConnectionMetric.NegativeMossamplesRatio)" Caption="Доля голосовых соединений с низкой разборчивостью речи" Editable="true"/>
+                    <DataGridCommandColumn/>
+                </DataGridColumns>
+                <DetailRowTemplate>
+                    @{
+                        var measure = context.MeasureGroup.Measure;
+                        <Text>
+                            Виртуальный Id(Протокол): @measure.FileGuid
+                        </Text>
+                    }
+                </DetailRowTemplate>
             </DataGrid>
             break;
         default:
@@ -201,7 +246,7 @@
 
     <div class="filters">
         <Buttons>
-            <Button class="save" @onclick="() => SaveOrCancel(true)">Сохранить всё</Button>
+            <Button class="save" id="@ButtonId" @onclick="() => SaveOrCancel(true)">Сохранить всё</Button>
             <Button class="save" @onclick="() => SaveMultiplyOrCancel(true)">Сохранить выделённое</Button>
         </Buttons>
         <div class="filters-menu">

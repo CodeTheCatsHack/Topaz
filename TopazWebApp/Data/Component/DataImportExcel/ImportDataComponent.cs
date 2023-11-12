@@ -2,6 +2,7 @@
 using Blazorise;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.JSInterop;
 using Parser;
 using Scaffold.Model;
 using Topaz.Data.Service;
@@ -113,6 +114,21 @@ public class ImportDataComponent : ComponentBase
 
     #endregion
 
+    #region ХотКеи
+
+    [Inject] public IJSRuntime JsRuntime { get; set; }
+
+    protected string ButtonId => $"button_{Guid.NewGuid()}";
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender) await JsRuntime.InvokeVoidAsync("blazorHotkeys.registerHotkey", "Enter", ButtonId);
+    }
+
+    #endregion
+
     #region Навигационные кнопки
 
     protected enum ViewData
@@ -125,9 +141,40 @@ public class ImportDataComponent : ComponentBase
         VoiceConnectionMetric
     }
 
-    protected void OnNavImport(ViewData viewData)
+    protected Task OnMeasureClick()
     {
-        ViewDataStatus = viewData;
+        ViewDataStatus = ViewData.Measure;
+        return Task.CompletedTask;
+    }
+
+    protected Task OnMeasureInfoClick()
+    {
+        ViewDataStatus = ViewData.MeasureInfo;
+        return Task.CompletedTask;
+    }
+
+    protected Task OnVoiceConnectionMetricClick()
+    {
+        ViewDataStatus = ViewData.VoiceConnectionMetric;
+        return Task.CompletedTask;
+    }
+
+    protected Task OnMessagingMetricClick()
+    {
+        ViewDataStatus = ViewData.MessagingMetrics;
+        return Task.CompletedTask;
+    }
+
+    protected Task OnHttpTransmittingMetricClick()
+    {
+        ViewDataStatus = ViewData.HttpTransmittingMetric;
+        return Task.CompletedTask;
+    }
+
+    protected Task OnReferenceInfoMetricClick()
+    {
+        ViewDataStatus = ViewData.ReferanceInfo;
+        return Task.CompletedTask;
     }
 
     #endregion
