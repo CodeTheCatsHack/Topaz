@@ -5,10 +5,6 @@ using Microsoft.EntityFrameworkCore;
 namespace Scaffold.Model;
 
 [Table("MeasureGroup")]
-[Index("HttpTransmittingMetricId", Name = "HttpTransmittingMetric_id_UNIQUE", IsUnique = true)]
-[Index("MessagingMetricId", Name = "MessagingMetric_id_UNIQUE", IsUnique = true)]
-[Index("ReferenceInfoId", Name = "ReferenceInfo_id_UNIQUE", IsUnique = true)]
-[Index("VoiceConnectionMetricId", Name = "VoiceConnectionMetric_Id_UNIQUE", IsUnique = true)]
 [Index("MeasureId", Name = "fk_MeasureGroup_Measure1_idx")]
 public partial class MeasureGroup
 {
