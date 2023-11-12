@@ -1,4 +1,5 @@
-﻿using Scaffold.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using Scaffold.Context;
 using Scaffold.Model;
 
 namespace Topaz.Data.Service;
@@ -28,5 +29,58 @@ public class ServiceDataDataBase
         }
 
         return true;
+    }
+
+    public async Task<Measure?> GetDataMeasureById(int measureId)
+    {
+        if (measureId == 0)
+        {
+            Measure? result = await TopazContext.Measures
+                .Include(x => x.MeasureInfo)
+                .Include(x => x.MeasureGroups).ThenInclude(x => x.VoiceConnectionMetric)
+                .Include(x => x.MeasureGroups).ThenInclude(x => x.MessagingMetric)
+                .Include(x => x.MeasureGroups).ThenInclude(x => x.HttpTransmittingMetric)
+                .Include(x => x.MeasureGroups).ThenInclude(x => x.ReferenceInfoMetric)
+                .OrderBy(x => x.IdMeasure)
+                .LastOrDefaultAsync();
+            return result ?? new Measure();
+        }
+        else
+        {
+            return await TopazContext.Measures
+                .Include(x => x.MeasureInfo)
+                .Include(x => x.MeasureGroups).ThenInclude(x => x.VoiceConnectionMetric)
+                .Include(x => x.MeasureGroups).ThenInclude(x => x.MessagingMetric)
+                .Include(x => x.MeasureGroups).ThenInclude(x => x.HttpTransmittingMetric)
+                .Include(x => x.MeasureGroups).ThenInclude(x => x.ReferenceInfoMetric)
+                .FirstOrDefaultAsync(m => m.IdMeasure == measureId);
+        }        
+    }
+
+    public async Task<List<Measure>?> GetLastTenMeasures()
+    {
+        return (await TopazContext.Measures
+            .Include(x => x.MeasureInfo)
+            .Include(x => x.MeasureGroups).ThenInclude(x => x.VoiceConnectionMetric)
+            .Include(x => x.MeasureGroups).ThenInclude(x => x.MessagingMetric)
+            .Include(x => x.MeasureGroups).ThenInclude(x => x.HttpTransmittingMetric)
+            .Include(x => x.MeasureGroups).ThenInclude(x => x.ReferenceInfoMetric)
+            .ToListAsync())
+            .TakeLast(10)
+            .ToList();
+    }
+
+    public async Task SaveMeasure(Measure measure)
+    {
+        if (measure.IdMeasure == 0)
+        {
+            TopazContext.Add(measure);
+        }
+        else
+        {
+            TopazContext.Update(measure);
+        }
+        
+        await TopazContext.SaveChangesAsync();
     }
 }
