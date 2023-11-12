@@ -365,5 +365,10 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # [custom]
-/ClientApp/
-/Web/appsettings*
+/TopazWebApp/appsettings*
+/TopazWebApp/wwwroot/file/
+/TopazWebApp/wwwroot/export/
+/DebugProj*/
+.idea
+log*.*
+

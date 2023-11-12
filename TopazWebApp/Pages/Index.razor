@@ -1,0 +1,219 @@
+﻿@page "/"
+@page "/measure/{measureId:int}"
+@inherits Topaz.Data.Component.Index.IndexComponent
+
+<PageTitle>Главная</PageTitle>
+
+<h1>Протокол @Measure?.MeasureInfo?.Protocol</h1>
+
+<div class="sidebar">
+    <div class="top-row ps-3 navbar navbar-dark">
+        <div class="container-fluid">            
+            <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu" style="color:black">
+                <span class="navbar-brand" style="color:black">Открыть последние 10 протоколов</span>
+            </button>
+        </div>
+    </div>
+    <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+        <nav class="flex-column">
+
+
+            @if (SidebarMeasures is not null && SidebarMeasures.Count != 0)
+            {
+                @foreach (Scaffold.Model.Measure currentMeasure in SidebarMeasures)
+                {
+                    <div class="nav-item px-3">
+                        <Button Clicked="async () => await OpenMeasureByIdAsync(currentMeasure.IdMeasure)">@currentMeasure.MeasureInfo.Protocol</Button>
+                    </div>
+                }                
+            }
+            else
+            {
+                <div>
+                    Нет Данных
+                </div>
+            }
+        </nav>
+    </div>
+</div>
+
+<div class="content">    
+    <div class="column">
+
+        @if (Measure is not null && Measure.MeasureGroups is not null) 
+        {
+            @foreach (Scaffold.Model.MeasureGroup group in Measure.MeasureGroups)
+            {
+                <div class="block-info fields">
+                    <span class="title">VoiceConnectionMetric @group.MeasureSubject</span>
+                    <Field>
+                        <FieldLabel>
+                            Объект контроля
+                        </FieldLabel>
+                        <TextEdit Text="@(group.MeasureSubject)" TextChanged="@(value => group.MeasureSubject = value)" />
+                    </Field>  
+                    <Field>
+                        <FieldLabel>@nameof(group.VoiceConnectionMetric.VoiceServiceNonAcessibility)</FieldLabel>
+                        <NumericPicker TValue="float?" Value="@(group.VoiceConnectionMetric?.VoiceServiceNonAcessibility)" ValueChanged="@((float? value) => group.VoiceConnectionMetric.VoiceServiceNonAcessibility = value ?? default(float))" />
+                    </Field>
+                    <Field>
+                        <FieldLabel>@nameof(group.VoiceConnectionMetric.VoiceServiceCutOfffRatio)</FieldLabel>
+                        <NumericPicker TValue="float?" Value="@(group.VoiceConnectionMetric?.VoiceServiceCutOfffRatio)" ValueChanged="@((float? value) => group.VoiceConnectionMetric.VoiceServiceCutOfffRatio = value ?? default(float))" />
+                    </Field>
+                    <Field>
+                        <FieldLabel>@nameof(group.VoiceConnectionMetric.SpeechQualityCallBasis)</FieldLabel>
+                        <NumericPicker TValue="float?" Value="@(group.VoiceConnectionMetric?.SpeechQualityCallBasis)" ValueChanged="@((float? value) => group.VoiceConnectionMetric.SpeechQualityCallBasis = value ?? default(float))" />
+                    </Field>
+                    <Field>
+                        <FieldLabel>@nameof(group.VoiceConnectionMetric.NegativeMossamplesRatio)</FieldLabel>
+                        <NumericPicker TValue="float?" Value="@(group.VoiceConnectionMetric?.NegativeMossamplesRatio)" ValueChanged="@((float? value) => group.VoiceConnectionMetric.NegativeMossamplesRatio = value ?? default(float))" />
+                    </Field>
+                </div>
+
+                <div class="block-info fields">
+                    <span class="title">MessagingMetric @group.MeasureSubject</span>
+                    <Field>
+                        <FieldLabel>
+                            Объект контроля
+                        </FieldLabel>
+                        <TextEdit Text="@(group.MeasureSubject)" TextChanged="@(value => group.MeasureSubject = value)" />
+                    </Field>
+                    <Field>
+                        <FieldLabel>@nameof(group.MessagingMetric.UndeliveredMessagePercentage)</FieldLabel>
+                        <NumericPicker TValue="float?" Value="@(group.MessagingMetric?.UndeliveredMessagePercentage)" ValueChanged="@((float? value) => group.MessagingMetric.UndeliveredMessagePercentage = value ?? default(float))" />
+                    </Field>
+                    <Field>
+                        <FieldLabel>@nameof(group.MessagingMetric.AverageMessageDeliveryTime)</FieldLabel>
+                        <NumericPicker TValue="float?" Value="@(group.MessagingMetric?.AverageMessageDeliveryTime)" ValueChanged="@((float? value) => group.MessagingMetric.AverageMessageDeliveryTime = value ?? default(float))" />
+                    </Field>
+                </div>
+            }
+        }
+                        
+    </div>
+    <div class="column">
+        @if (Measure is not null && Measure.MeasureGroups is not null)
+        {
+            @foreach (Scaffold.Model.MeasureGroup group in Measure.MeasureGroups)
+            {
+                <div class="block-info fields">
+                    <span class="title">HttpTransmittingMetric @group.MeasureSubject</span>
+                    <Field>
+                        <FieldLabel>
+                            Объект контроля
+                        </FieldLabel>
+                        <TextEdit Text="@(group.MeasureSubject)" TextChanged="@(value => group.MeasureSubject = value)" />
+                    </Field>  
+                    <Field>
+                        <FieldLabel>@nameof(group.HttpTransmittingMetric.SessionFailureRatio)</FieldLabel>
+                        <NumericPicker TValue="float?" Value="@(group.HttpTransmittingMetric?.SessionFailureRatio)" ValueChanged="@((float? value) => group.HttpTransmittingMetric.SessionFailureRatio = value ?? default(float))" />
+                    </Field>
+                    <Field>
+                        <FieldLabel>@nameof(group.HttpTransmittingMetric.UlmeanUserDataRate)</FieldLabel>
+                        <NumericPicker TValue="float?" Value="@(group.HttpTransmittingMetric?.UlmeanUserDataRate)" ValueChanged="@((float? value) => group.HttpTransmittingMetric.UlmeanUserDataRate = value ?? default(float))" />
+                    </Field>
+                     <Field>
+                        <FieldLabel>@nameof(group.HttpTransmittingMetric.DlmeanUserDataRate)</FieldLabel>
+                        <NumericPicker TValue="float?" Value="@(group.HttpTransmittingMetric?.DlmeanUserDataRate)" ValueChanged="@((float? value) => group.HttpTransmittingMetric.DlmeanUserDataRate = value ?? default(float))" />
+                    </Field>
+                    <Field>
+                        <FieldLabel>@nameof(group.HttpTransmittingMetric.SessionTime)</FieldLabel>
+                        <NumericPicker TValue="float?" Value="@(group.HttpTransmittingMetric?.SessionTime)" ValueChanged="@((float? value) => group.HttpTransmittingMetric.SessionTime = value ?? default(float))" />
+                    </Field>
+                </div>
+                <div class="block-info fields">
+                    <span class="title">ReferenceInfoMetric @group.MeasureSubject</span>
+                    <Field>
+                        <FieldLabel>
+                            Объект контроля
+                        </FieldLabel>
+                        <TextEdit Text="@(group.MeasureSubject)" TextChanged="@(value => group.MeasureSubject = value)" />
+                    </Field>
+                    <Field>
+                        <FieldLabel>@nameof(group.ReferenceInfoMetric.TotalTestVoiceConnections)</FieldLabel>
+                        <NumericPicker TValue="int?" Value="@(group.ReferenceInfoMetric?.TotalTestVoiceConnections)" ValueChanged="@((int? value) => group.ReferenceInfoMetric.TotalTestVoiceConnections = value ?? default(int))" />
+                    </Field>
+                    <Field>
+                        <FieldLabel>@nameof(group.ReferenceInfoMetric.NegativeMossamplesCount)</FieldLabel>
+                        <NumericPicker TValue="int?" Value="@(group.ReferenceInfoMetric?.NegativeMossamplesCount)" ValueChanged="@((int? value) => group.ReferenceInfoMetric.NegativeMossamplesCount = value ?? default(int))" />
+                    </Field>
+                    <Field>
+                        <FieldLabel>@nameof(group.ReferenceInfoMetric.TotalMessagesSent)</FieldLabel>
+                        <NumericPicker TValue="int?" Value="@(group.ReferenceInfoMetric?.TotalMessagesSent)" ValueChanged="@((int? value) => group.ReferenceInfoMetric.TotalMessagesSent = value ?? default(int))" />
+                    </Field>
+                    <Field>
+                        <FieldLabel>@nameof(group.ReferenceInfoMetric.TotalConnectionAttempts)</FieldLabel>
+                        <NumericPicker TValue="int?" Value="@(group.ReferenceInfoMetric?.TotalConnectionAttempts)" ValueChanged="@((int? value) => group.ReferenceInfoMetric.TotalConnectionAttempts = value ?? default(int))" />
+                    </Field>
+                    <Field>
+                        <FieldLabel>@nameof(group.ReferenceInfoMetric.TotalTestSessions)</FieldLabel>
+                        <NumericPicker TValue="int?" Value="@(group.ReferenceInfoMetric?.TotalTestSessions)" ValueChanged="@((int? value) => group.ReferenceInfoMetric.TotalTestSessions = value ?? default(int))" />
+                    </Field>
+                </div>
+            }
+        }       
+    </div>
+    <div class="column">
+        <div class="block-info fields">
+            <span class="title">Информация о филиале</span>
+            <Field>
+                <FieldLabel>Наименование протокола</FieldLabel>
+                <TextEdit Text="@(Measure?.MeasureInfo?.Protocol)" TextChanged="@(value => Measure.MeasureInfo.Protocol = value)" />
+            </Field>
+            <Field>
+                <FieldLabel>Наименование предприятия</FieldLabel>
+                <TextEdit Text="@(Measure?.MeasureInfo?.CompanyName)" TextChanged="@(value => Measure.MeasureInfo.CompanyName = value)"/>
+            </Field>
+            <Field>
+                <FieldLabel>Тип предприятия</FieldLabel>
+                <TextEdit Text="@(Measure?.MeasureInfo?.CompanyType)" TextChanged="@(value => Measure.MeasureInfo.CompanyType = value)" />
+            </Field>
+            <Field>
+                <FieldLabel>Аббривиатура предприятия</FieldLabel>
+                <TextEdit Text="@(Measure?.MeasureInfo?.CompanyAbbr)" TextChanged="@(value => Measure.MeasureInfo.CompanyAbbr = value)" />
+            </Field>
+            <Field>
+                <FieldLabel>Полное наименование предприятия</FieldLabel>
+                <TextEdit Text="@(Measure?.MeasureInfo?.CompanyFullname)" TextChanged="@(value => Measure.MeasureInfo.CompanyFullname = value)" />
+            </Field>
+        </div>
+        <div class="block-info fields">
+            <span class="title">Информация о протоколе</span>
+            <Field>
+                <FieldLabel>Условия</FieldLabel>
+                <TextEdit Text="@(Measure?.Conditions)" TextChanged="@(value => Measure.Conditions = value)" />
+            </Field>
+            <Field>
+                <FieldLabel>Место</FieldLabel>
+                <TextEdit Text="@(Measure?.Place)" TextChanged="@(value => Measure.Place = value)" />
+            </Field>
+            <Field>
+                <FieldLabel>Дата начала измерения</FieldLabel>
+                <DateEdit TValue="DateOnly?" Date="@(Measure?.StartMeasure)" TextChanged="@((DateOnly? value) => Measure.StartMeasure = value ?? DateOnly.MinValue)" />
+            </Field>
+            <Field>
+                <FieldLabel>Дата конца измерения</FieldLabel>
+                <DateEdit TValue="DateOnly?" Date="@(Measure?.EndMeasure)" TextChanged="@((DateOnly? value) => Measure.EndMeasure = value ?? DateOnly.MinValue)" />
+            </Field>
+            <Field>
+                <FieldLabel>Оборудование</FieldLabel>
+                <TextEdit Text="@(Measure?.Equipment)" TextChanged="@(value => Measure.Equipment = value)" />
+            </Field>
+        </div>
+    </div>
+</div>
+
+@code{
+    protected bool _collapseNavMenu = true;
+    protected string? NavMenuCssClass => _collapseNavMenu ? "collapse" : null;
+
+    protected void ToggleNavMenu()
+    {
+        _collapseNavMenu = !_collapseNavMenu;
+    }
+}
+
+<Button Color="Color.Primary" Clicked="SaveMeasure">Сохранить в БД</Button>
+<Button Color="Color.Primary" Clicked="ExportFileCurrentMeasure">Экспорт на локальный компьютер</Button>
+<Button Color="Color.Primary" Clicked="HandleRedraw">Перерисовать диаграмму</Button>
+<Chart TextSize="TextSize.ExtraLarge" @ref="VCMetricsChart" TItem="float" Type="ChartType.Radar" />

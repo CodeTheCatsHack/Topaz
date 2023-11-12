@@ -1,0 +1,51 @@
+@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
+*{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-sizing: border-box;
+    font-family: 'Ruda', sans-serif;
+}
+
+button,
+a,
+input{
+    cursor: pointer;
+}
+
+html{
+    min-height: 100vh;
+}
+
+body{
+    height: 100%;
+}
+
+h1{
+    color: #585858;
+    font-size: 64px;
+    font-weight: 800;
+}
+
+h1, h2, h3, h4, h5, h6{
+    margin-bottom: 0;
+}
+
+h1:focus, .h1:focus{
+    outline: none;
+}
+
+@media screen and (max-width: 768px){
+    main{
+        padding: 24px 48px 118px 144px;
+    }
+    
+    .content{
+        margin-top: 16px;
+    }
+
+    h1, .h1{
+        font-size: 35px;
+    }
+}

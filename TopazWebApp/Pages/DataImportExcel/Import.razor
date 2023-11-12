@@ -1,0 +1,441 @@
+@page "/import"
+@using static Topaz.Data.Service.ServiceInfoMeasure;
+@using static Topaz.Data.ObservableExpression;
+@using Scaffold.Model
+@inherits Topaz.Data.ImportDataComponent
+
+<div class="sidebar">
+    <div class="top-row ps-3 navbar navbar-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand" href="" style="color:black" @onclick="ToggleModal">Выбор импорт таблиц</span>
+            <button title="Navigation menu" class="navbar-toggler" style="color:black" @onclick="ToggleModal">
+                <button class="navbar-toggler-icon"></button>
+            </button>
+        </div>
+    </div>
+    @if (ShowModal)
+    {
+        <div class="modal show" id="modal">
+            <div class="content">
+                <button class="modal-close" id="modalClose" @onclick="ToggleModal">Закрыть</button>
+                <div class="@NavMenuCssClass items" @onclick="ToggleModal">
+                    @if (Measures.Count != 0)
+                    {
+                        <div class="item">
+                            <button @onclick="OnMeasureClick">Информацию по филиалам</button>
+                        </div>
+                        <div class="item">
+                            <button @onclick="OnMeasureInfoClick">Подробная информация по филиалам</button>
+                        </div>
+                        <div class="item">
+                            <button @onclick="OnVoiceConnectionMetricClick">Показатели голосового соединения</button>
+                        </div>
+                        <div class="item">
+                            <button @onclick="OnMessagingMetricClick">Показатели передачи текстовых сообщений</button>
+                        </div>
+                        <div class="item">
+                            <button @onclick="OnHttpTransmittingMetricClick">Показатели по передаче данных(за исключением услуг связи по передаче данных для целей передачи голосовой информации)</button>
+                        </div>
+                        <div class="item">
+                            <button @onclick="OnReferenceInfoMetricClick">Справочная информация</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="item error">
+                            Нет данных
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<h1>Импорт</h1>
+
+<div class="table-wrapper">
+@switch (ViewDataStatus)
+{
+    case ViewData.MeasureInfo:
+        <Field>
+            <Text>Таблица информации по протоколу</Text>
+        </Field>
+        <Field>
+            <DataGrid TItem="MeasureInfo"
+                      Data="@Measures.Select(x => x.MeasureInfo)"
+                      bind-SelectedRow="SelectedMeasureInfo"
+                      PageSize="10"
+                      TotalItems="@Total"
+                      ShowPager="true"
+                      Responsive
+                      Editable
+                      Filterable
+                      Sortable
+                      RowUpdated="CallbackUpdateSaved"
+                      FilterMode="DataGridFilterMode.Menu"
+                      SortMode="DataGridSortMode.Multiple"
+                      UseValidation
+                      ShowValidationsSummary="false">
+                <DataGridColumns>
+                    <DataGridColumn Field="@nameof(MeasureInfo.Protocol)" Caption="Протокол" Editable/>
+                    <DataGridColumn Field="@nameof(MeasureInfo.CompanyFullname)" Caption="Полное наименование компании" Editable/>
+                    <DataGridColumn Field="@nameof(MeasureInfo.CompanyAbbr)" Caption="Абривиатура" Editable/>
+                    <DataGridColumn Field="@nameof(MeasureInfo.CompanyName)" Caption="Название" Editable/>
+                    <DataGridColumn Field="@nameof(MeasureInfo.CompanyType)" Caption="Федеральное значение" Editable/>
+                    <DataGridCommandColumn>
+                        <NewCommandTemplate>
+                        </NewCommandTemplate>
+                        <SaveCommandTemplate>
+                            <Button Clicked="@context.Clicked">Сохранить</Button>
+                        </SaveCommandTemplate>
+                        <EditCommandTemplate>
+                            <Button Clicked="@context.Clicked">Редактирование</Button>
+                        </EditCommandTemplate>
+                        <DeleteCommandTemplate>
+                            <Button Clicked="@context.Clicked">Удаление</Button>
+                        </DeleteCommandTemplate>
+                        <CancelCommandTemplate>
+                            <Button Clicked="@context.Clicked">Отмена</Button>
+                        </CancelCommandTemplate>
+                    </DataGridCommandColumn>
+                </DataGridColumns>
+                <DetailRowTemplate>
+                    @{
+                        var measure = context.Measure;
+                        <Text>
+                            @measure.FileGuid
+                        </Text>
+                    }
+                </DetailRowTemplate>
+            </DataGrid>
+        </Field>
+        break;
+    case ViewData.Measure:
+        <Field>
+            <Text>Таблица Филиалов</Text>
+        </Field>
+        <Field>
+            <DataGrid TItem="Measure"
+                      Data="Measures"
+                      PageSize="10"
+                      TotalItems="Total"
+                      ShowPager="true"
+                      Responsive
+                      Editable
+                      Filterable
+                      Sortable
+                      RowRemoved="CallbackRemove"
+                      FilterMode="DataGridFilterMode.Menu"
+                      SortMode="DataGridSortMode.Multiple"
+                      SelectedRows="SelectedsMeasure"
+                      SelectionMode="DataGridSelectionMode.Multiple"
+                      UseValidation
+                      ShowValidationsSummary="false">
+                <DataGridColumns>
+                    <DataGridColumn Field="@nameof(Measure.FileGuid)" Caption="Виртуальный Id (Протокола)" Readonly="true"/>
+                    <DataGridColumn Field="@nameof(Measure.Place)" Caption="Место контроля" Editable/>
+                    <DataGridColumn Field="@nameof(Measure.Equipment)" Caption="Измерительное оборудование" Editable/>
+                    <DataGridColumn Field="@nameof(Measure.Conditions)" Caption="Условия контроля" Editable/>
+                    <DataGridColumn Field="@nameof(Measure.StartMeasure)" Caption="Дата начала контроля" Editable/>
+                    <DataGridColumn Field="@nameof(Measure.EndMeasure)" Caption="Дата конца контроля" Editable/>
+                    <DataGridCommandColumn>
+                        <NewCommandTemplate>
+                        </NewCommandTemplate>
+                        <SaveCommandTemplate>
+                            <Button Clicked="@context.Clicked">Сохранить</Button>
+                        </SaveCommandTemplate>
+                        <EditCommandTemplate>
+                            <Button Clicked="@context.Clicked">Редактирование</Button>
+                        </EditCommandTemplate>
+                        <DeleteCommandTemplate>
+                            <Button Clicked="@context.Clicked">Удаление</Button>
+                        </DeleteCommandTemplate>
+                        <CancelCommandTemplate>
+                            <Button Clicked="@context.Clicked">Отмена</Button>
+                        </CancelCommandTemplate>
+                    </DataGridCommandColumn>
+                </DataGridColumns>
+            </DataGrid>
+        </Field>
+        break;
+    case ViewData.ReferanceInfo:
+        <Field>
+            <Text>Таблица cправочной информация</Text>
+        </Field>
+        <Field>
+            <DataGrid TItem="ReferenceInfoMetric"
+                      Data="@(Measures.CastTo<ReferenceInfoMetric>())"
+                      bind-SelectedRow="SelectedReferenceInfoMetric"
+                      PageSize="10"
+                      TotalItems="@Total"
+                      ShowPager="true"
+                      Responsive
+                      Editable
+                      Filterable
+                      Sortable
+                      RowUpdated="CallbackUpdateSaved"
+                      FilterMode="DataGridFilterMode.Menu"
+                      SortMode="DataGridSortMode.Multiple"
+                      UseValidation
+                      ShowValidationsSummary="false">
+                <DataGridColumns>
+                    <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalConnectionAttempts)" Caption="Общее кол-во соединений HTTP" Editable/>
+                    <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalVoiceSequences)" Caption="POLQA" Editable/>
+                    <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalMessagesSent)" Caption="Общее кол-во отправленных SMS" Editable/>
+                    <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalTestSessions)" Caption="Общее кол-во сессий HTTP (Web-browsing)" Editable/>
+                    <DataGridColumn Field="@nameof(ReferenceInfoMetric.NegativeMossamplesCount)" Caption="Кол-во соединений с низкой разборчивостью" Editable/>
+                    <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalTestVoiceConnections)" Caption="Общее кол-во голосовых соединений" Editable/>
+                    <DataGridCommandColumn>
+                        <NewCommandTemplate>
+                        </NewCommandTemplate>
+                        <SaveCommandTemplate>
+                            <Button Clicked="@context.Clicked">Сохранить</Button>
+                        </SaveCommandTemplate>
+                        <EditCommandTemplate>
+                            <Button Clicked="@context.Clicked">Редактирование</Button>
+                        </EditCommandTemplate>
+                        <DeleteCommandTemplate>
+                            <Button Clicked="@context.Clicked">Удаление</Button>
+                        </DeleteCommandTemplate>
+                        <CancelCommandTemplate>
+                            <Button Clicked="@context.Clicked">Отмена</Button>
+                        </CancelCommandTemplate>
+                    </DataGridCommandColumn>
+                </DataGridColumns>
+                <DetailRowTemplate>
+                    @{
+                        var measure = context.MeasureGroup.Measure;
+                        <Form>
+                            <Field>
+                                <Text>
+                                    Виртуальный Id(Протокол): @measure.FileGuid
+                                </Text>
+                            </Field>
+                            <Field>
+                                <Text>
+                                    Объект контроля (провайдер связи): @context.MeasureGroup.MeasureSubject
+                                </Text>
+                            </Field>
+                        </Form>
+                    }
+                </DetailRowTemplate>
+            </DataGrid>
+        </Field>
+        break;
+    case ViewData.MessagingMetrics:
+        <Field>
+            <Text>Таблица показателей передачи текстовых сообщений</Text>
+        </Field>
+        <Field>
+            <DataGrid TItem="MessagingMetric"
+                      Data="@(Measures.CastTo<MessagingMetric>())"
+                      bind-SelectedRow="SelectedMessagingMetric"
+                      PageSize="10"
+                      TotalItems="Total"
+                      ShowPager="true"
+                      Responsive
+                      Editable
+                      Filterable
+                      Sortable
+                      RowUpdated="CallbackUpdateSaved"
+                      FilterMode="DataGridFilterMode.Menu"
+                      SortMode="DataGridSortMode.Multiple"
+                      UseValidation
+                      ShowValidationsSummary="false">
+                <DataGridColumns>
+                    <DataGridColumn Field="@nameof(MessagingMetric.UndeliveredMessagePercentage)" Caption="Доля недоставленных SMS сообщений [%]" Editable="true"/>
+                    <DataGridColumn Field="@nameof(MessagingMetric.AverageMessageDeliveryTime)" Caption="Среднее время доставки SMS сообщений [сек]" Editable="true"/>
+                    <DataGridCommandColumn>
+                        <NewCommandTemplate>
+                        </NewCommandTemplate>
+                        <SaveCommandTemplate>
+                            <Button Clicked="@context.Clicked">Сохранить</Button>
+                        </SaveCommandTemplate>
+                        <EditCommandTemplate>
+                            <Button Clicked="@context.Clicked">Редактирование</Button>
+                        </EditCommandTemplate>
+                        <DeleteCommandTemplate>
+                            <Button Clicked="@context.Clicked">Удаление</Button>
+                        </DeleteCommandTemplate>
+                        <CancelCommandTemplate>
+                            <Button Clicked="@context.Clicked">Отмена</Button>
+                        </CancelCommandTemplate>
+                    </DataGridCommandColumn>
+                </DataGridColumns>
+                <DetailRowTemplate>
+                    @{
+                        var measure = context.MeasureGroup.Measure;
+                        <Form>
+                            <Field>
+                                <Text>
+                                    Виртуальный Id(Протокол): @measure.FileGuid
+                                </Text>
+                            </Field>
+                            <Field>
+                                <Text>
+                                    Объект контроля (провайдер связи): @context.MeasureGroup.MeasureSubject
+                                </Text>
+                            </Field>
+                        </Form>
+                    }
+                </DetailRowTemplate>
+            </DataGrid>
+        </Field>
+        break;
+    case ViewData.HttpTransmittingMetric:
+        <Field>
+            <Text>Показатели по передаче данных(за исключением услуг связи по передаче данных для целей передачи голосовой информации)</Text>
+        </Field>
+        <Field>
+            <DataGrid TItem="HttpTransmittingMetric"
+                      Data="@(Measures.CastTo<HttpTransmittingMetric>())"
+                      bind-SelectedRow="SelectedHttpTransMetric"
+                      PageSize="10"
+                      TotalItems="Total"
+                      ShowPager="true"
+                      Responsive
+                      Editable
+                      Filterable
+                      Sortable
+                      RowUpdated="CallbackUpdateSaved"
+                      FilterMode="DataGridFilterMode.Menu"
+                      SortMode="DataGridSortMode.Multiple"
+                      UseValidation
+                      ShowValidationsSummary="false">
+                <DataGridColumns>
+                    <DataGridColumn Field="@nameof(HttpTransmittingMetric.SessionFailureRatio)" Caption="Доля неуспешных сессий по протоколу HTTP [%]" Editable="true"/>
+                    <DataGridColumn Field="@nameof(HttpTransmittingMetric.UlmeanUserDataRate)" Caption="UL Mean User Data Rate [kbit/sec]" Editable="true"/>
+                    <DataGridColumn Field="@nameof(HttpTransmittingMetric.DlmeanUserDataRate)" Caption="DL Mean User Data Rate [kbit/sec]" Editable="true"/>
+                    <DataGridColumn Field="@nameof(HttpTransmittingMetric.SessionTime)" Caption="Продолжительность успешной сессии [s]" Editable="true"/>
+                    <DataGridCommandColumn>
+                        <NewCommandTemplate>
+                        </NewCommandTemplate>
+                        <SaveCommandTemplate>
+                            <Button Clicked="@context.Clicked">Сохранить</Button>
+                        </SaveCommandTemplate>
+                        <EditCommandTemplate>
+                            <Button Clicked="@context.Clicked">Редактирование</Button>
+                        </EditCommandTemplate>
+                        <DeleteCommandTemplate>
+                            <Button Clicked="@context.Clicked">Удаление</Button>
+                        </DeleteCommandTemplate>
+                        <CancelCommandTemplate>
+                            <Button Clicked="@context.Clicked">Отмена</Button>
+                        </CancelCommandTemplate>
+                    </DataGridCommandColumn>
+                </DataGridColumns>
+                <DetailRowTemplate>
+                    @{
+                        var measure = context.MeasureGroup.Measure;
+                        <Form>
+                            <Field>
+                                <Text>
+                                    Виртуальный Id(Протокол): @measure.FileGuid
+                                </Text>
+                            </Field>
+                            <Field>
+                                <Text>
+                                    Объект контроля (провайдер связи): @context.MeasureGroup.MeasureSubject
+                                </Text>
+                            </Field>
+                        </Form>
+                    }
+                </DetailRowTemplate>
+            </DataGrid>
+        </Field>
+        break;
+    case ViewData.VoiceConnectionMetric:
+        <Field>
+            <Text>Показатели голосового соединения</Text>
+        </Field>
+        <Field>
+            <DataGrid TItem="VoiceConnectionMetric"
+                      Data="@(Measures.CastTo<VoiceConnectionMetric>())"
+                      bind-SelectedRow="SelectedVoiceConnectionMetric"
+                      PageSize="10"
+                      TotalItems="Total"
+                      ShowPager="true"
+                      Responsive
+                      Editable
+                      Filterable
+                      Sortable
+                      RowUpdated="CallbackUpdateSaved"
+                      FilterMode="DataGridFilterMode.Menu"
+                      SortMode="DataGridSortMode.Multiple"
+                      UseValidation
+                      ShowValidationsSummary="false">
+                <DataGridColumns>
+                    <DataGridColumn Field="@nameof(VoiceConnectionMetric.VoiceServiceNonAcessibility)" Caption="Доля неуспешных попыток установления голосового соединения" Editable="true"/>
+                    <DataGridColumn Field="@nameof(VoiceConnectionMetric.VoiceServiceCutOfffRatio)" Caption="Доля обрывов голосовых соединений" Editable="true"/>
+                    <DataGridColumn Field="@nameof(VoiceConnectionMetric.SpeechQualityCallBasis)" Caption="Средняя разборчивость речи на соединение" Editable="true"/>
+                    <DataGridColumn Field="@nameof(VoiceConnectionMetric.NegativeMossamplesRatio)" Caption="Доля голосовых соединений с низкой разборчивостью речи" Editable="true"/>
+                    <DataGridCommandColumn>
+                        <NewCommandTemplate>
+                        </NewCommandTemplate>
+                        <SaveCommandTemplate>
+                            <Button Clicked="@context.Clicked">Сохранить</Button>
+                        </SaveCommandTemplate>
+                        <EditCommandTemplate>
+                            <Button Clicked="@context.Clicked">Редактирование</Button>
+                        </EditCommandTemplate>
+                        <DeleteCommandTemplate>
+                            <Button Clicked="@context.Clicked">Удаление</Button>
+                        </DeleteCommandTemplate>
+                        <CancelCommandTemplate>
+                            <Button Clicked="@context.Clicked">Отмена</Button>
+                        </CancelCommandTemplate>
+                    </DataGridCommandColumn>
+                </DataGridColumns>
+                <DetailRowTemplate>
+                    @{
+                        var measure = context.MeasureGroup.Measure;
+                        <Form>
+                            <Field>
+                                <Text>
+                                    Виртуальный Id(Протокол): @measure.FileGuid
+                                </Text>
+                            </Field>
+                            <Field>
+                                <Text>
+                                    Объект контроля (провайдер связи): @context.MeasureGroup.MeasureSubject
+                                </Text>
+                            </Field>
+                        </Form>
+                    }
+                </DetailRowTemplate>
+            </DataGrid>
+        </Field>
+        break;
+    default:
+        throw new ArgumentOutOfRangeException();
+}
+<div class="filters">
+    <Buttons>
+        <Button class="save" @onclick="() => SaveOrCancel(true)">Сохранить всё</Button>
+        <Button class="save" @onclick="() => SaveMultiplyOrCancel(true)">Сохранить выделённое</Button>
+    </Buttons>
+    <div class="filters-menu">
+        <div class="filter-item file">
+            <Field>
+                <FileEdit @ref="fileEdit" Changed="OnChanged" Filter=".xlsx" Multiple/>
+            </Field>
+
+            <Button @onclick="UploadFiles">Загрузить файлы на сервер</Button>
+        </div>
+    </div>
+    <Buttons>
+        <Button class="cancel" @onclick="() => SaveOrCancel(true)">Сброс</Button>
+        <Button class="cancel" @onclick="() => SaveMultiplyOrCancel(false)">Удаление всех выделенных строк</Button>
+    </Buttons>
+</div>
+
+<Alert @ref="AlertImports" Color="AlertColor">
+    <AlertMessage>
+        @AlertTitle
+    </AlertMessage>
+    <AlertDescription>
+        @AlertTitle
+    </AlertDescription>
+</Alert>
+</div>

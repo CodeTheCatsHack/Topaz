@@ -1,0 +1,19 @@
+.page{
+    height: calc(100% - 70px);
+}
+
+main{
+    display: flex;
+    min-height: 100vh;
+    background: linear-gradient(rgba(116, 116, 116, 0.249), rgba(238, 248, 255, 1));
+    flex-direction: column;
+    padding: 140px 144px;
+}
+
+h1, .h1{
+    color: #585858;
+    font-size: 64px;
+    font-weight: 800;
+    margin-bottom: 0;
+}
+
