@@ -37,5 +37,5 @@ public partial class VoiceConnectionMetric
 
     [ForeignKey("MeasureGroupId")]
     [InverseProperty("VoiceConnectionMetric")]
-    public virtual MeasureGroup? MeasureGroup { get; set; }
+    public virtual MeasureGroup MeasureGroup { get; set; } = null!;
 }

@@ -38,5 +38,5 @@ public partial class HttpTransmittingMetric
 
     [ForeignKey("MeasureGroupId")]
     [InverseProperty("HttpTransmittingMetric")]
-    public virtual MeasureGroup? MeasureGroup { get; set; }
+    public virtual MeasureGroup MeasureGroup { get; set; } = null!;
 }
