@@ -2,6 +2,7 @@
 using Blazorise;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.FileProviders;
+using Parser;
 using Scaffold.Model;
 using Topaz.Data.Service;
 using static Topaz.Data.Service.ServiceInfoMeasure;
@@ -14,36 +15,100 @@ public class ImportDataComponent : ComponentBase
     [Inject] private IWebHostEnvironment HostingEnvironment { get; set; }
     [Inject] private ServiceDataDataBase ServiceDataDataBase { get; set; }
 
+    protected bool UpdateOne { get; set; }
     protected ViewData ViewDataStatus { get; set; } = ViewData.Measure;
-    protected Measure SelectedMeasure { get; set; } = new();
-    protected MeasureInfo SelectedMeasureInfo { get; set; } = new();
-    protected ReferenceInfoMetric SelectedReferenceInfoMetric { get; set; } = new();
 
     protected int Total { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        if (!UpdateOne)
+        {
+            var fileProvider = new PhysicalFileProvider(HostingEnvironment.WebRootPath);
+            var files = fileProvider.GetDirectoryContents("file");
+
+            foreach (var file in files)
+            {
+                Interpreter interpreter = new(file.PhysicalPath!);
+                var localMeasure = interpreter.ParseMeasure();
+
+                if (localMeasure == null)
+                    continue;
+
+                if (Guid.TryParse(file.Name[..file.Name.IndexOf('.')], out var guidFile))
+                    localMeasure.FileGuid = guidFile;
+
+                if (Measures.All(x => x.FileGuid != guidFile)) Measures.Add(localMeasure);
+            }
+
+            UpdateOne = true;
+        }
+
         await base.OnInitializedAsync();
     }
 
-    #region Валидация
+    #region Запросы DataGrid
 
-    public async Task Save()
+    protected void CallbackRemove(Measure obj)
     {
-        var wwwrootPath = Path.Combine(HostingEnvironment.WebRootPath);
+        var fileName = Path.Combine("file", $"{obj.FileGuid}.xlsx");
+        var filePath = Path.Combine(HostingEnvironment.WebRootPath, fileName);
+        File.Delete(filePath);
+    }
 
-        if (!Directory.Exists(wwwrootPath))
-            return;
+    #endregion
 
-        foreach (var fileMeasure in FilesMeasures)
+    #region Выбранные строки разных таблиц
+
+    protected List<Measure> SelectedsMeasure { get; set; } = new();
+    protected MeasureInfo SelectedMeasureInfo { get; set; } = new();
+    protected ReferenceInfoMetric SelectedReferenceInfoMetric { get; set; } = new();
+    protected MessagingMetric SelectedMessagingMetric { get; set; }
+    protected HttpTransmittingMetric SelectedHttpTransMetric { get; set; }
+    protected VoiceConnectionMetric SelectedVoiceConnectionMetric { get; set; }
+
+    #endregion
+
+    #region Работа с данными DataGrd
+
+    protected async Task SaveMultiplyOrCancel(bool save)
+    {
+        foreach (var measure in SelectedsMeasure)
         {
-            if (!await ServiceDataDataBase.DataMeasure(fileMeasure.Value!))
-                continue;
+            var fileName = $"{measure.FileGuid}.xlsx";
+            var filePath = Path.Combine(HostingEnvironment.WebRootPath, "file", fileName);
 
-            var fileName = Path.Combine("file", $"{fileMeasure.Key}.xlsx");
-            var filePath = Path.Combine(HostingEnvironment.WebRootPath, fileName);
-            File.Delete(filePath);
+            if (File.Exists(filePath))
+                switch (save)
+                {
+                    case true when await ServiceDataDataBase.DataMeasure(measure):
+                    case false:
+                        File.Delete(filePath);
+                        break;
+                }
+
+            Measures.Remove(measure);
         }
+    }
+
+    protected async Task SaveOrCancel(bool save)
+    {
+        foreach (var measure in Measures)
+        {
+            var fileName = $"{measure.FileGuid}.xlsx";
+            var filePath = Path.Combine(HostingEnvironment.WebRootPath, "file", fileName);
+
+            if (File.Exists(filePath))
+                switch (save)
+                {
+                    case true when await ServiceDataDataBase.DataMeasure(measure):
+                    case false:
+                        File.Delete(filePath);
+                        break;
+                }
+        }
+
+        Measures.Clear();
     }
 
     #endregion
@@ -60,34 +125,9 @@ public class ImportDataComponent : ComponentBase
         VoiceConnectionMetric
     }
 
-    protected void OnMeasureClick()
+    protected void OnNavImport(ViewData viewData)
     {
-        ViewDataStatus = ViewData.Measure;
-    }
-
-    protected void OnMeasureInfoClick()
-    {
-        ViewDataStatus = ViewData.MeasureInfo;
-    }
-
-    protected void OnVoiceConnectionMetricClick()
-    {
-        ViewDataStatus = ViewData.VoiceConnectionMetric;
-    }
-
-    protected void OnMessagingMetricClick()
-    {
-        ViewDataStatus = ViewData.MessagingMetrics;
-    }
-
-    protected void OnHttpTransmittingMetricClick()
-    {
-        ViewDataStatus = ViewData.HttpTransmittingMetric;
-    }
-
-    protected void OnReferenceInfoMetricClick()
-    {
-        ViewDataStatus = ViewData.ReferanceInfo;
+        ViewDataStatus = viewData;
     }
 
     #endregion
