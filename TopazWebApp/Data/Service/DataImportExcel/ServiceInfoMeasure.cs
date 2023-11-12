@@ -1,7 +1,5 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using Blazorise;
-using Microsoft.Extensions.FileProviders;
 using Parser;
 using Scaffold.Model;
 
@@ -15,11 +13,9 @@ public class ServiceInfoMeasure
     }
 
     private IWebHostEnvironment HostingEnvironment { get; }
-
-    public static ConcurrentDictionary<Guid, Measure?> FilesMeasures { get; set; } = new();
     public static ObservableCollection<Measure> Measures { get; set; } = new();
 
-    public async Task<List<Measure>?> GetDataMeasures(List<IFileEntry> filesToUpload)
+    public async Task GetDataMeasures(List<IFileEntry> filesToUpload)
     {
         foreach (var file in filesToUpload)
         {
@@ -30,27 +26,19 @@ public class ServiceInfoMeasure
             await using var stream = new FileStream(filePath, FileMode.Create);
 
             await file.OpenReadStream().CopyToAsync(stream);
-        }
 
-        var fileProvider = new PhysicalFileProvider(HostingEnvironment.WebRootPath);
-        var files = fileProvider.GetDirectoryContents("file");
-        List<Measure> localMeasures = new();
-        Measures.Clear();
-        FilesMeasures.Clear();
-
-        foreach (var file in files)
-        {
-            Interpreter interpreter = new(file.PhysicalPath!);
+            Interpreter interpreter = new(filePath);
             var localMeasure = interpreter.ParseMeasure();
-            if (localMeasure != null)
+
+            if (localMeasure == null)
+                continue;
+
+            localMeasure.FileGuid = guidFileMeasure;
+
+            if (Measures.All(x => x.FileGuid != guidFileMeasure))
             {
-                localMeasures.Add(localMeasure);
                 Measures.Add(localMeasure);
-                if (Guid.TryParse(file.Name[..file.Name.IndexOf('.')], out var guidFile))
-                    FilesMeasures.TryAdd(guidFile, localMeasure);
             }
         }
-
-        return localMeasures.Count == 0 ? null : localMeasures;
     }
 }
