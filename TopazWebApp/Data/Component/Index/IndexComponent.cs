@@ -1,5 +1,9 @@
 ﻿using Blazorise.Charts;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting.Internal;
+using Microsoft.JSInterop;
+using Parser;
 using Scaffold.Model;
 using Topaz.Data.Service;
 
@@ -21,6 +25,9 @@ public class IndexComponent : ComponentBase
 
     [Inject]
     public NavigationManager NavigationManager { get; set; }
+
+    [Inject]
+    public IWebHostEnvironment WebHostEnvironment { get; set; }
 
     protected async Task SaveMeasure()
     {
@@ -73,6 +80,20 @@ public class IndexComponent : ComponentBase
         Measure = await ServiceDataDataBase.GetDataMeasureById(measureId);
     }
 
+    protected async Task ExportFileCurrentMeasure()
+    {
+        var guidFileMeasure = Guid.NewGuid();
+        var relativeExportPath = Path.Combine("export", $"{guidFileMeasure}.xlsx");
+        var absExportPath = Path.Combine(WebHostEnvironment.WebRootPath, relativeExportPath);
+        
+        Constructor constructor = new Constructor(absExportPath, Path.Combine(WebHostEnvironment.WebRootPath,"export-template","default.xlsx"));
+
+        await constructor.InjectMeasure(Measure);
+        constructor.Save();
+
+        NavigationManager.NavigateTo($"export/{guidFileMeasure}.xlsx", true);
+    }
+
     protected override async Task OnInitializedAsync()
     {
         Measure = await ServiceDataDataBase.GetDataMeasureById(measureId);
@@ -80,6 +101,5 @@ public class IndexComponent : ComponentBase
 
         await base.OnInitializedAsync();
         await HandleRedraw();
-
     }
 }

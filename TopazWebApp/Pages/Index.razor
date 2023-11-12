@@ -47,6 +47,12 @@
                 <div class="block-info fields">
                     <span class="title">VoiceConnectionMetric @group.MeasureSubject</span>
                     <Field>
+                        <FieldLabel>
+                            Объект контроля
+                        </FieldLabel>
+                        <TextEdit Text="@(group.MeasureSubject)" TextChanged="@(value => group.MeasureSubject = value)" />
+                    </Field>  
+                    <Field>
                         <FieldLabel>@nameof(group.VoiceConnectionMetric.VoiceServiceNonAcessibility)</FieldLabel>
                         <NumericPicker TValue="float?" Value="@(group.VoiceConnectionMetric?.VoiceServiceNonAcessibility)" ValueChanged="@((float? value) => group.VoiceConnectionMetric.VoiceServiceNonAcessibility = value ?? default(float))" />
                     </Field>
@@ -66,6 +72,12 @@
 
                 <div class="block-info fields">
                     <span class="title">MessagingMetric @group.MeasureSubject</span>
+                    <Field>
+                        <FieldLabel>
+                            Объект контроля
+                        </FieldLabel>
+                        <TextEdit Text="@(group.MeasureSubject)" TextChanged="@(value => group.MeasureSubject = value)" />
+                    </Field>
                     <Field>
                         <FieldLabel>@nameof(group.MessagingMetric.UndeliveredMessagePercentage)</FieldLabel>
                         <NumericPicker TValue="float?" Value="@(group.MessagingMetric?.UndeliveredMessagePercentage)" ValueChanged="@((float? value) => group.MessagingMetric.UndeliveredMessagePercentage = value ?? default(float))" />
@@ -87,6 +99,12 @@
                 <div class="block-info fields">
                     <span class="title">HttpTransmittingMetric @group.MeasureSubject</span>
                     <Field>
+                        <FieldLabel>
+                            Объект контроля
+                        </FieldLabel>
+                        <TextEdit Text="@(group.MeasureSubject)" TextChanged="@(value => group.MeasureSubject = value)" />
+                    </Field>  
+                    <Field>
                         <FieldLabel>@nameof(group.HttpTransmittingMetric.SessionFailureRatio)</FieldLabel>
                         <NumericPicker TValue="float?" Value="@(group.HttpTransmittingMetric?.SessionFailureRatio)" ValueChanged="@((float? value) => group.HttpTransmittingMetric.SessionFailureRatio = value ?? default(float))" />
                     </Field>
@@ -105,6 +123,12 @@
                 </div>
                 <div class="block-info fields">
                     <span class="title">ReferenceInfoMetric @group.MeasureSubject</span>
+                    <Field>
+                        <FieldLabel>
+                            Объект контроля
+                        </FieldLabel>
+                        <TextEdit Text="@(group.MeasureSubject)" TextChanged="@(value => group.MeasureSubject = value)" />
+                    </Field>
                     <Field>
                         <FieldLabel>@nameof(group.ReferenceInfoMetric.TotalTestVoiceConnections)</FieldLabel>
                         <NumericPicker TValue="int?" Value="@(group.ReferenceInfoMetric?.TotalTestVoiceConnections)" ValueChanged="@((int? value) => group.ReferenceInfoMetric.TotalTestVoiceConnections = value ?? default(int))" />
@@ -189,6 +213,7 @@
     }
 }
 
-<Button Color="Color.Primary" Clicked="SaveMeasure">Save</Button>
+<Button Color="Color.Primary" Clicked="SaveMeasure">Сохранить в БД</Button>
+<Button Color="Color.Primary" Clicked="ExportFileCurrentMeasure">Экспорт на локальный компьютер</Button>
 <Button Color="Color.Primary" Clicked="HandleRedraw">Redraw</Button>
-<Chart @ref="VCMetricsChart" TItem="float" Type="ChartType.Radar" />
+<Chart TextSize="TextSize.ExtraLarge" @ref="VCMetricsChart" TItem="float" Type="ChartType.Radar" />
