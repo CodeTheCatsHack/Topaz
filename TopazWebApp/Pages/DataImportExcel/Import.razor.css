@@ -2,6 +2,12 @@ label{
     color: rgba(88, 88, 88, 1);
 }
 
+button,
+input,
+a{
+    cursor: pointer;
+}
+
 input[type=text]{
     height: 20px;
     border: 1px solid #000000;
@@ -37,14 +43,127 @@ input[type=text]::placeholder{
     align-items: center;
 }
 
+.navbar-brand{
+    font-size: 24px;
+    font-weight: 700;
+    margin-left: auto;
+    cursor: pointer;
+    color: #000000;
+    transition: background-color 0.3s;
+}
+
+.navbar-brand:hover{
+    background-color: #3158B6;
+}
+
+.navbar-toggler{
+    background-color: rgba(88, 88, 88, 1);
+    border-radius: 10px;
+    padding: 5px;
+    transition: background-color 0.3s;
+}
+
+.navbar-toggler:hover{
+    background-color: #3158B6;
+}
+
+.navbar-toggler-icon{
+    background-color: rgba(88, 88, 88, 1);
+    transition: background-color 0.3s;
+}
+
+.navbar-toggler:hover > .navbar-toggler-icon{
+    background-color: #3158B6;
+}
+
+.navbar > .container-fluid{
+    margin-left: auto;
+}
+
+.modal{
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 90;
+}
+
+.modal.show{
+    display: block;
+}
+ 
+.content{
+    width: 50%;
+    height: 50%;
+    max-width: 1000px;
+    max-height: 500px;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 70px 30px 10px 30px;
+    overflow: auto;
+    z-index: 92;
+}
+
+.items{
+    display: flex;
+    flex-direction: column;
+}
+
+.items > .item{
+    margin-top: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.items > .item:first-child{
+    margin-top: 0;
+}
+
+.items > .item:hover{
+    background-color: rgba(88, 88, 88, 0.25);
+}
+
+.item > button,
+div.error{
+    color: #000000;
+    height: 100%;
+    font-size: 20px;
+    font-weight: 600;
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    text-align: left;
+}
+
+.modal-close{
+    font-size: 16px;
+    font-weight: 800;
+    padding: 10px 30px;
+    position: absolute;
+    background-color: #284A9D;
+    color: #FFFFFF;
+    top: 10px;
+    right: 10px;
+    border-radius: 20px;
+    transition: background-color 0.3s;
+}
+
+.modal-close:hover{
+    background-color: #3158B6;;
+}
+
 .table-wrapper{
     display: flex;
     flex-direction: column;
-    
     width: 100%;
     margin-top: 45px;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-    border-radius: 20px;
 }
 
 .filters{

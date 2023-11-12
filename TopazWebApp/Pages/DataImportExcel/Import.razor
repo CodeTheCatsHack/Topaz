@@ -7,43 +7,48 @@
 <div class="sidebar">
     <div class="top-row ps-3 navbar navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="" style="color:black">Выбор импорт таблиц</a>
-            <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu" style="color:black">
-                <span class="navbar-toggler-icon"></span>
+            <span class="navbar-brand" href="" style="color:black" @onclick="ToggleModal">Выбор импорт таблиц</span>
+            <button title="Navigation menu" class="navbar-toggler" style="color:black" @onclick="ToggleModal">
+                <button class="navbar-toggler-icon"></button>
             </button>
         </div>
     </div>
-    <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-        <nav class="flex-column">
-            @if (Measures.Count != 0)
-            {
-                <div class="nav-item px-3">
-                    <Button Clicked="OnMeasureClick">Информацию по филиалам</Button>
+    @if (showModal){
+        <div class="modal show" id="modal">
+            <div class="content">
+                <button class="modal-close" id="modalClose" @onclick="ToggleModal">Закрыть</button>
+                <div class="@NavMenuCssClass items" @onclick="ToggleModal">
+                    @if (Measures.Count != 0)
+                    {
+                        <div class="item">
+                            <button @onclick="OnMeasureClick">Информацию по филиалам</button>
+                        </div>
+                        <div class="item">
+                            <button @onclick="OnMeasureInfoClick">Подробная информация по филиалам</button>
+                        </div>
+                        <div class="item">
+                            <button @onclick="OnVoiceConnectionMetricClick">Показатели голосового соединения</button>
+                        </div>
+                        <div class="item">
+                            <button @onclick="OnMessagingMetricClick">Показатели передачи текстовых сообщений</button>
+                        </div>
+                        <div class="item">
+                            <button @onclick="OnHttpTransmittingMetricClick">Показатели по передаче данных(за исключением услуг связи по передаче данных для целей передачи голосовой информации)</button>
+                        </div>
+                        <div class="item">
+                            <button @onclick="OnReferenceInfoMetricClick">Справочная информация</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="item error">
+                            Нет данных
+                        </div>   
+                    }
                 </div>
-                <div class="nav-item px-3">
-                    <Button Clicked="OnMeasureInfoClick">Подробная информация по филиалам</Button>
-                </div>
-                <div class="nav-item px-3">
-                    <Button Clicked="OnVoiceConnectionMetricClick">Показатели голосового соединения</Button>
-                </div>
-                <div class="nav-item px-3">
-                    <Button Clicked="OnMessagingMetricClick">Показатели передачи текстовых сообщений</Button>
-                </div>
-                <div class="nav-item px-3">
-                    <Button Clicked="OnHttpTransmittingMetricClick">Показатели по передаче данных(за исключением услуг связи по передаче данных для целей передачи голосовой информации)</Button>
-                </div>
-                <div class="nav-item px-3">
-                    <Button Clicked="OnReferenceInfoMetricClick">Справочная информация</Button>
-                </div>
-            }
-            else
-            {
-                <div>
-                    Нет Данных
-                </div>
-            }
-        </nav>
-    </div>
+            </div>
+        </div>
+    }
 </div>
 
 <h1>Импорт</h1>
