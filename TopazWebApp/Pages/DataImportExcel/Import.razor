@@ -77,7 +77,22 @@
                     <DataGridColumn Field="@nameof(MeasureInfo.CompanyAbbr)" Caption="Абривиатура" Editable/>
                     <DataGridColumn Field="@nameof(MeasureInfo.CompanyName)" Caption="Название" Editable/>
                     <DataGridColumn Field="@nameof(MeasureInfo.CompanyType)" Caption="Федеральное значение" Editable/>
-                    <DataGridCommandColumn/>
+                    <DataGridCommandColumn>
+                        <NewCommandTemplate>
+                        </NewCommandTemplate>
+                        <SaveCommandTemplate>
+                            <Button Clicked="@context.Clicked">Сохранить</Button>
+                        </SaveCommandTemplate>
+                        <EditCommandTemplate>
+                            <Button Clicked="@context.Clicked">Редактирование</Button>
+                        </EditCommandTemplate>
+                        <DeleteCommandTemplate>
+                            <Button Clicked="@context.Clicked">Удаление</Button>
+                        </DeleteCommandTemplate>
+                        <CancelCommandTemplate>
+                            <Button Clicked="@context.Clicked">Отмена</Button>
+                        </CancelCommandTemplate>
+                    </DataGridCommandColumn>
                 </DataGridColumns>
                 <DetailRowTemplate>
                     @{
@@ -118,7 +133,22 @@
                     <DataGridColumn Field="@nameof(Measure.Conditions)" Caption="Условия контроля" Editable/>
                     <DataGridColumn Field="@nameof(Measure.StartMeasure)" Caption="Дата начала контроля" Editable/>
                     <DataGridColumn Field="@nameof(Measure.EndMeasure)" Caption="Дата конца контроля" Editable/>
-                    <DataGridCommandColumn/>
+                    <DataGridCommandColumn>
+                        <NewCommandTemplate>
+                        </NewCommandTemplate>
+                        <SaveCommandTemplate>
+                            <Button Clicked="@context.Clicked">Сохранить</Button>
+                        </SaveCommandTemplate>
+                        <EditCommandTemplate>
+                            <Button Clicked="@context.Clicked">Редактирование</Button>
+                        </EditCommandTemplate>
+                        <DeleteCommandTemplate>
+                            <Button Clicked="@context.Clicked">Удаление</Button>
+                        </DeleteCommandTemplate>
+                        <CancelCommandTemplate>
+                            <Button Clicked="@context.Clicked">Отмена</Button>
+                        </CancelCommandTemplate>
+                    </DataGridCommandColumn>
                 </DataGridColumns>
             </DataGrid>
         </Field>
@@ -150,7 +180,22 @@
                     <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalTestSessions)" Caption="Общее кол-во сессий HTTP (Web-browsing)" Editable/>
                     <DataGridColumn Field="@nameof(ReferenceInfoMetric.NegativeMossamplesCount)" Caption="Кол-во соединений с низкой разборчивостью" Editable/>
                     <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalTestVoiceConnections)" Caption="Общее кол-во голосовых соединений" Editable/>
-                    <DataGridCommandColumn/>
+                    <DataGridCommandColumn>
+                        <NewCommandTemplate>
+                        </NewCommandTemplate>
+                        <SaveCommandTemplate>
+                            <Button Clicked="@context.Clicked">Сохранить</Button>
+                        </SaveCommandTemplate>
+                        <EditCommandTemplate>
+                            <Button Clicked="@context.Clicked">Редактирование</Button>
+                        </EditCommandTemplate>
+                        <DeleteCommandTemplate>
+                            <Button Clicked="@context.Clicked">Удаление</Button>
+                        </DeleteCommandTemplate>
+                        <CancelCommandTemplate>
+                            <Button Clicked="@context.Clicked">Отмена</Button>
+                        </CancelCommandTemplate>
+                    </DataGridCommandColumn>
                 </DataGridColumns>
                 <DetailRowTemplate>
                     @{
@@ -195,7 +240,22 @@
                 <DataGridColumns>
                     <DataGridColumn Field="@nameof(MessagingMetric.UndeliveredMessagePercentage)" Caption="Доля недоставленных SMS сообщений [%]" Editable="true"/>
                     <DataGridColumn Field="@nameof(MessagingMetric.AverageMessageDeliveryTime)" Caption="Среднее время доставки SMS сообщений [сек]" Editable="true"/>
-                    <DataGridCommandColumn/>
+                    <DataGridCommandColumn>
+                        <NewCommandTemplate>
+                        </NewCommandTemplate>
+                        <SaveCommandTemplate>
+                            <Button Clicked="@context.Clicked">Сохранить</Button>
+                        </SaveCommandTemplate>
+                        <EditCommandTemplate>
+                            <Button Clicked="@context.Clicked">Редактирование</Button>
+                        </EditCommandTemplate>
+                        <DeleteCommandTemplate>
+                            <Button Clicked="@context.Clicked">Удаление</Button>
+                        </DeleteCommandTemplate>
+                        <CancelCommandTemplate>
+                            <Button Clicked="@context.Clicked">Отмена</Button>
+                        </CancelCommandTemplate>
+                    </DataGridCommandColumn>
                 </DataGridColumns>
                 <DetailRowTemplate>
                     @{
@@ -242,7 +302,22 @@
                     <DataGridColumn Field="@nameof(HttpTransmittingMetric.UlmeanUserDataRate)" Caption="UL Mean User Data Rate [kbit/sec]" Editable="true"/>
                     <DataGridColumn Field="@nameof(HttpTransmittingMetric.DlmeanUserDataRate)" Caption="DL Mean User Data Rate [kbit/sec]" Editable="true"/>
                     <DataGridColumn Field="@nameof(HttpTransmittingMetric.SessionTime)" Caption="Продолжительность успешной сессии [s]" Editable="true"/>
-                    <DataGridCommandColumn/>
+                    <DataGridCommandColumn>
+                        <NewCommandTemplate>
+                        </NewCommandTemplate>
+                        <SaveCommandTemplate>
+                            <Button Clicked="@context.Clicked">Сохранить</Button>
+                        </SaveCommandTemplate>
+                        <EditCommandTemplate>
+                            <Button Clicked="@context.Clicked">Редактирование</Button>
+                        </EditCommandTemplate>
+                        <DeleteCommandTemplate>
+                            <Button Clicked="@context.Clicked">Удаление</Button>
+                        </DeleteCommandTemplate>
+                        <CancelCommandTemplate>
+                            <Button Clicked="@context.Clicked">Отмена</Button>
+                        </CancelCommandTemplate>
+                    </DataGridCommandColumn>
                 </DataGridColumns>
                 <DetailRowTemplate>
                     @{
@@ -289,7 +364,22 @@
                     <DataGridColumn Field="@nameof(VoiceConnectionMetric.VoiceServiceCutOfffRatio)" Caption="Доля обрывов голосовых соединений" Editable="true"/>
                     <DataGridColumn Field="@nameof(VoiceConnectionMetric.SpeechQualityCallBasis)" Caption="Средняя разборчивость речи на соединение" Editable="true"/>
                     <DataGridColumn Field="@nameof(VoiceConnectionMetric.NegativeMossamplesRatio)" Caption="Доля голосовых соединений с низкой разборчивостью речи" Editable="true"/>
-                    <DataGridCommandColumn/>
+                    <DataGridCommandColumn>
+                        <NewCommandTemplate>
+                        </NewCommandTemplate>
+                        <SaveCommandTemplate>
+                            <Button Clicked="@context.Clicked">Сохранить</Button>
+                        </SaveCommandTemplate>
+                        <EditCommandTemplate>
+                            <Button Clicked="@context.Clicked">Редактирование</Button>
+                        </EditCommandTemplate>
+                        <DeleteCommandTemplate>
+                            <Button Clicked="@context.Clicked">Удаление</Button>
+                        </DeleteCommandTemplate>
+                        <CancelCommandTemplate>
+                            <Button Clicked="@context.Clicked">Отмена</Button>
+                        </CancelCommandTemplate>
+                    </DataGridCommandColumn>
                 </DataGridColumns>
                 <DetailRowTemplate>
                     @{
