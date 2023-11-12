@@ -26,7 +26,7 @@ namespace Parser
             {
                 throw new FileNotFoundException("file not found: " + filepath);
             }
-            else if (Path.GetExtension(filepath) == ".xlsx")
+            else if (Path.GetExtension(filepath) != ".xlsx")
             {
                 throw new Exceptions.FileWrongExtensionException(Path.GetExtension(filepath), ".xlsx");
             }
@@ -169,7 +169,7 @@ namespace Parser
             public class FileWrongExtensionException : Exception
             {
                 public FileWrongExtensionException(string extActual, string extExpected) : base(
-                    $"Получен неправильный формат файла: {extActual}, ожидался: {extExpected}")
+                    $"Получен неправильный формат файла: '{extActual}', ожидался: '{extExpected}'")
                 {
                 }
             }
