@@ -28,7 +28,6 @@
     display: none;
 }
 
-
 .nav-content > .chapter{
     flex-grow: 1;
     width: 550px;
@@ -39,7 +38,6 @@
 .nav.expanded{
     background-color: rgba(0, 0, 0, 0.4);
     width: 100%;
-    z-index: 11;
 }
 
 .nav.expanded .nav-content{

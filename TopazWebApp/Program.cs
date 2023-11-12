@@ -32,6 +32,7 @@ try
 
     Log.Information("Загрузка сервисов Blazor Server...");
     builder.Services.AddScoped<ServiceInfoMeasure>();
+    builder.Services.AddScoped<ServiceDataDataBase>();
 
     builder.Services.AddHttpContextAccessor();
 

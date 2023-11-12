@@ -3,13 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Scaffold.Model;
 
+[Table("Measure")]
 public partial class Measure
 {
     /// <summary>
     /// Идентификатор измерения
     /// </summary>
     [Key]
-    public int id { get; set; }
+    [Column("idMeasure")]
+    public int IdMeasure { get; set; }
 
     /// <summary>
     /// Дата начала контроля
@@ -40,7 +42,7 @@ public partial class Measure
     public string Equipment { get; set; } = null!;
 
     [InverseProperty("Measure")]
-    public virtual ICollection<MeasureGroup> MeasureGroup { get; } = new List<MeasureGroup>();
+    public virtual ICollection<MeasureGroup> MeasureGroups { get; } = new List<MeasureGroup>();
 
     [InverseProperty("Measure")] public virtual MeasureInfo? MeasureInfo { get; set; }
 }

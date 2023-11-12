@@ -1,11 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Scaffold.Model;
 
+[Table("MeasureInfo")]
+[Index("MeasureId", Name = "fk_MeasureInfo_Measure1_idx", IsUnique = true)]
 public partial class MeasureInfo
 {
-    [Key] public int MeasureId { get; set; }
+    [Key] [Column("idMeasureInfo")] public int IdMeasureInfo { get; set; }
+
+    public int MeasureId { get; set; }
 
     [StringLength(100)] public string CompanyName { get; set; } = null!;
 

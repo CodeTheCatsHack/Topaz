@@ -1,81 +1,48 @@
 ﻿using System.Collections.ObjectModel;
 using Blazorise;
-using Blazorise.DataGrid;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.FileProviders;
 using Scaffold.Model;
 using Topaz.Data.Service;
+using static Topaz.Data.Service.ServiceInfoMeasure;
 
 namespace Topaz.Data;
 
 public class ImportDataComponent : ComponentBase
 {
-    protected DataGrid<Measure> DataGridView;
-
-    [Inject] public ServiceInfoMeasure ServiceInfoMeasure { get; set; }
+    [Inject] private ServiceInfoMeasure ServiceInfoMeasure { get; set; }
     [Inject] private IWebHostEnvironment HostingEnvironment { get; set; }
+    [Inject] private ServiceDataDataBase ServiceDataDataBase { get; set; }
 
     protected ViewData ViewDataStatus { get; set; } = ViewData.Measure;
-    protected Measure SelectedMeasure { get; set; }
-    protected ObservableCollection<Measure> DataViewMeasure { get; set; } = new();
-    protected ObservableCollection<MeasureInfo> DataViewMeasureInfos { get; set; } = new();
-    protected ObservableCollection<MessagingMetric> DataViewMessagingMetrics { get; set; } = new();
-    protected ObservableCollection<ReferenceInfoMetric> DataViewReferenceInfos { get; set; } = new();
-    protected ObservableCollection<HttpTransmittingMetric> DataViewHttpTransmittingMetrics { get; set; } = new();
-    protected ObservableCollection<VoiceConnectionMetric> DataViewVoiceConnectionMetrics { get; set; } = new();
+    protected Measure SelectedMeasure { get; set; } = new();
+    protected MeasureInfo SelectedMeasureInfo { get; set; } = new();
+    protected ReferenceInfoMetric SelectedReferenceInfoMetric { get; set; } = new();
 
     protected int Total { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        DataViewMeasure = ServiceInfoMeasure.Measures;
-
-        foreach (var measure in ServiceInfoMeasure.Measures)
-        {
-            var group = measure.MeasureGroup.First();
-            if (group.ReferenceInfoMetric != null)
-                DataViewReferenceInfos.Add(group.ReferenceInfoMetric);
-        }
-
-        foreach (var measure in ServiceInfoMeasure.Measures)
-        {
-            var group = measure.MeasureGroup.First();
-            if (group.HttpTransmittingMetric != null)
-                DataViewHttpTransmittingMetrics.Add(group.HttpTransmittingMetric);
-        }
-
-        foreach (var measure in ServiceInfoMeasure.Measures)
-        {
-            var group = measure.MeasureGroup.First();
-            if (group.VoiceConnectionMetric != null)
-                DataViewVoiceConnectionMetrics.Add(group.VoiceConnectionMetric);
-        }
-
-        foreach (var measure in ServiceInfoMeasure.Measures)
-        {
-            var group = measure.MeasureGroup.First();
-            if (group.MessagingMetric != null)
-                DataViewMessagingMetrics.Add(group.MessagingMetric);
-        }
-
-        foreach (var measure in ServiceInfoMeasure.Measures)
-            if (measure.MeasureInfo != null)
-                DataViewMeasureInfos.Add(measure.MeasureInfo);
-
         await base.OnInitializedAsync();
     }
 
     #region Валидация
 
-    protected Blazorise.Validations Validator;
-
-    protected async Task Validation()
+    public async Task Save()
     {
-        if (await Validator.ValidateAll())
+        var wwwrootPath = Path.Combine(HostingEnvironment.WebRootPath);
+
+        if (!Directory.Exists(wwwrootPath))
+            return;
+
+        foreach (var fileMeasure in FilesMeasures)
         {
-        }
-        else
-        {
+            if (!await ServiceDataDataBase.DataMeasure(fileMeasure.Value!))
+                continue;
+
+            var fileName = Path.Combine("file", $"{fileMeasure.Key}.xlsx");
+            var filePath = Path.Combine(HostingEnvironment.WebRootPath, fileName);
+            File.Delete(filePath);
         }
     }
 
@@ -89,7 +56,6 @@ public class ImportDataComponent : ComponentBase
         MeasureInfo,
         ReferanceInfo,
         MessagingMetrics,
-        ReferanceMetricsInfo,
         HttpTransmittingMetric,
         VoiceConnectionMetric
     }
@@ -121,7 +87,7 @@ public class ImportDataComponent : ComponentBase
 
     protected void OnReferenceInfoMetricClick()
     {
-        ViewDataStatus = ViewData.ReferanceMetricsInfo;
+        ViewDataStatus = ViewData.ReferanceInfo;
     }
 
     #endregion
@@ -138,24 +104,14 @@ public class ImportDataComponent : ComponentBase
 
     protected async Task UploadFiles()
     {
-        var filesToUpload = new List<IFileEntry>(selectedFiles);
         var wwwrootFileProvider = new PhysicalFileProvider(HostingEnvironment.WebRootPath);
         var directoryContents = wwwrootFileProvider.GetDirectoryContents("file");
 
-        if (!directoryContents.Exists) Directory.CreateDirectory(Path.Combine(HostingEnvironment.WebRootPath, "file"));
-
-        foreach (var file in filesToUpload)
-        {
-            var fileName = Path.Combine("file", $"{Guid.NewGuid()}{Path.GetExtension(file.Name)}");
-
-            var filePath = Path.Combine(HostingEnvironment.WebRootPath, fileName);
-
-            await using var stream = new FileStream(filePath, FileMode.Create);
-            await file.OpenReadStream().CopyToAsync(stream);
-        }
-
+        if (!directoryContents.Exists)
+            Directory.CreateDirectory(Path.Combine(HostingEnvironment.WebRootPath, "file"));
+        var filesToUpload = new List<IFileEntry>(selectedFiles);
         selectedFiles.Clear();
-        ServiceInfoMeasure.GetDataMeasures();
+        await ServiceInfoMeasure.GetDataMeasures(filesToUpload);
     }
 
     #endregion
@@ -171,4 +127,20 @@ public class ImportDataComponent : ComponentBase
     }
 
     #endregion
+}
+
+public static class ObservableExpression
+{
+    public static ObservableCollection<T> CastTo<T>(this IEnumerable<Measure> list)
+    {
+        return new ObservableCollection<T>(list
+            .Select(x => x.MeasureGroups.Select(group =>
+                    (T)group.GetType().GetProperties().First(prop => prop.PropertyType == typeof(T))
+                        .GetValue(group, null)!)
+                .ToList()).Aggregate((list1, metrics) =>
+            {
+                list1.AddRange(metrics);
+                return list1;
+            }));
+    }
 }

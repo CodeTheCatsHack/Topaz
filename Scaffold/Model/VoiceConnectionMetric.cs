@@ -4,10 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Scaffold.Model;
 
+[Table("VoiceConnectionMetric")]
 [Index("MeasureGroupId", Name = "fk_VoiceConnectionMetric_MeasureGroup1_idx", IsUnique = true)]
 public partial class VoiceConnectionMetric
 {
-    [Key] public int MeasureGroupId { get; set; }
+    [Key]
+    [Column("idVoiceConnectionMetric")]
+    public int IdVoiceConnectionMetric { get; set; }
+
+    public int? MeasureGroupId { get; set; }
 
     /// <summary>
     /// Доля неуспешных попыток установления голосового соединения 
@@ -27,9 +32,10 @@ public partial class VoiceConnectionMetric
     /// <summary>
     /// Доля голосовых соединений с низкой разборчивостью речи
     /// </summary>
-    public float NegativeMOSsamplesRatio { get; set; }
+    [Column("NegativeMOSsamplesRatio")]
+    public float NegativeMossamplesRatio { get; set; }
 
     [ForeignKey("MeasureGroupId")]
     [InverseProperty("VoiceConnectionMetric")]
-    public virtual MeasureGroup MeasureGroup { get; set; } = null!;
+    public virtual MeasureGroup? MeasureGroup { get; set; }
 }

@@ -2,6 +2,9 @@
 
 namespace Scaffold.Expressions
 {
+    /// <summary>
+    /// Статичный класс расширений фильтраций
+    /// </summary>
     public static class Filter
     {
         /// <summary>
@@ -165,6 +168,9 @@ namespace Scaffold.Expressions
             }
         }
 
+        /// <summary>
+        /// Кастомные ошибки фильтрации
+        /// </summary>
         public static class Exceptions
         {
             public class WrongComparePolicyException : Exception

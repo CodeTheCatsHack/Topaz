@@ -4,10 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Scaffold.Model;
 
+[Table("MessagingMetric")]
 [Index("MeasureGroupId", Name = "fk_MessagingMetric_MeasureGroup1_idx", IsUnique = true)]
 public partial class MessagingMetric
 {
-    [Key] public int MeasureGroupId { get; set; }
+    [Key] [Column("idMessagingMetric")] public int IdMessagingMetric { get; set; }
+
+    public int? MeasureGroupId { get; set; }
 
     /// <summary>
     /// Доля недоставленных SMS сообщений [%]
@@ -21,5 +24,5 @@ public partial class MessagingMetric
 
     [ForeignKey("MeasureGroupId")]
     [InverseProperty("MessagingMetric")]
-    public virtual MeasureGroup MeasureGroup { get; set; } = null!;
+    public virtual MeasureGroup? MeasureGroup { get; set; }
 }
