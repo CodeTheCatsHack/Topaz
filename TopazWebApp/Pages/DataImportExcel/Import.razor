@@ -1,5 +1,6 @@
 @page "/import"
-@using Topaz.Data.Service
+@using static Topaz.Data.Service.ServiceInfoMeasure;
+@using static Topaz.Data.ObservableExpression;
 @using Scaffold.Model
 @inherits Topaz.Data.ImportDataComponent
 
@@ -14,7 +15,7 @@
     </div>
     <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
         <nav class="flex-column">
-            @if (ServiceInfoMeasure.Measures.Count != 0)
+            @if (Measures.Count != 0)
             {
                 <div class="nav-item px-3">
                     <Button @onclick="OnMeasureClick">Информацию по филиалам</Button>
@@ -51,50 +52,84 @@
     @switch (ViewDataStatus)
     {
         case ViewData.MeasureInfo:
+            <DataGrid TItem="MeasureInfo"
+                      Data="Measures.Select(x => x.MeasureInfo)"
+                      bind-SelectedRow="SelectedMeasureInfo"
+                      PageSize="10"
+                      TotalItems="@Total"
+                      ShowPager="true"
+                      Responsive
+                      Editable
+                      Filterable
+                      Sortable
+                      FilterMode="DataGridFilterMode.Menu"
+                      SortMode="DataGridSortMode.Multiple"
+                      UseValidation
+                      ShowValidationsSummary="true">
+                <DataGridColumn Field="@nameof(MeasureInfo.Protocol)" Caption="Протокол" Editable/>
+                <DataGridColumn Field="@nameof(MeasureInfo.CompanyFullname)" Caption="Полное наименование компании" Editable/>
+                <DataGridColumn Field="@nameof(MeasureInfo.CompanyAbbr)" Caption="Абривиатура" Editable/>
+                <DataGridColumn Field="@nameof(MeasureInfo.CompanyName)" Caption="Название" Editable/>
+                <DataGridColumn Field="@nameof(MeasureInfo.CompanyType)" Caption="Федеральное значение" Editable/>
+                <DataGridCommandColumn/>
+            </DataGrid>
             break;
         case ViewData.Measure:
-            <Validations @ref="@Validator" Mode="ValidationMode.Manual" Model="@SelectedMeasure" HandlerType="typeof(FluentValidationHandler)">
-                <DataGrid TItem="Measure"
-                          @ref="DataGridView"
-                          Data="@DataViewMeasure"
-                          bind-SelectedRow="SelectedMeasure"
-                          PageSize="10"
-                          TotalItems="@Total"
-                          ShowPager="true"
-                          Responsive
-                          Editable
-                          Filterable
-                          Sortable
-                          FilterMode="DataGridFilterMode.Menu"
-                          SortMode="DataGridSortMode.Multiple"
-                          UseValidation
-                          ShowValidationsSummary="true">
-                    <DataGridColumn Field="@nameof(Measure.Place)" Caption="Место контроля" Editable>
-                        <EditTemplate>
-                            <Validation>
-                                <TextEdit Text="@((string)context.CellValue)" TextChanged="value => context.CellValue = value">
-                                    <Feedback>
-                                        <ValidationError/>
-                                    </Feedback>
-                                </TextEdit>
-                            </Validation>
-                        </EditTemplate>
-                    </DataGridColumn>
-                    <DataGridColumn Field="@nameof(Measure.Equipment)" Caption="Измерительное оборудование" Editable/>
-                    <DataGridColumn Field="@nameof(Measure.Conditions)" Caption="Условия контроля" Editable/>
-                    <DataGridColumn Field="@nameof(Measure.StartMeasure)" Caption="Дата начала контроля" Editable/>
-                    <DataGridColumn Field="@nameof(Measure.EndMeasure)" Caption="Дата конца контроля" Editable/>
-                    <DataGridCommandColumn/>
-                </DataGrid>
-            </Validations>
+            <DataGrid TItem="Measure"
+                      Data="Measures"
+                      bind-SelectedRow="SelectedMeasure"
+                      PageSize="10"
+                      TotalItems="Total"
+                      ShowPager="true"
+                      Responsive
+                      Editable
+                      Filterable
+                      Sortable
+                      FilterMode="DataGridFilterMode.Menu"
+                      SortMode="DataGridSortMode.Multiple"
+                      UseValidation
+                      ShowValidationsSummary="false">
+                <DataGridColumn Field="@nameof(Measure.Place)" Caption="Место контроля" Editable>
+                    <EditTemplate>
+                        <TextEdit Text="@((string)context.CellValue)" TextChanged="value => context.CellValue = value">
+                            <Feedback>
+                                <ValidationError/>
+                            </Feedback>
+                        </TextEdit>
+                    </EditTemplate>
+                </DataGridColumn>
+                <DataGridColumn Field="@nameof(Measure.Equipment)" Caption="Измерительное оборудование" Editable/>
+                <DataGridColumn Field="@nameof(Measure.Conditions)" Caption="Условия контроля" Editable/>
+                <DataGridColumn Field="@nameof(Measure.StartMeasure)" Caption="Дата начала контроля" Editable/>
+                <DataGridColumn Field="@nameof(Measure.EndMeasure)" Caption="Дата конца контроля" Editable/>
+                <DataGridCommandColumn/>
+            </DataGrid>
             break;
         case ViewData.ReferanceInfo:
-
+            <DataGrid TItem="ReferenceInfoMetric"
+                      Data="Measures.CastTo<ReferenceInfoMetric>()"
+                      bind-SelectedRow="SelectedReferenceInfoMetric"
+                      PageSize="10"
+                      TotalItems="@Total"
+                      ShowPager="true"
+                      Responsive
+                      Editable
+                      Filterable
+                      Sortable
+                      FilterMode="DataGridFilterMode.Menu"
+                      SortMode="DataGridSortMode.Multiple"
+                      UseValidation
+                      ShowValidationsSummary="true">
+                <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalConnectionAttempts)" Caption="Общее кол-во соединений HTTP" Editable/>
+                <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalVoiceSequences)" Caption="POLQA" Editable/>
+                <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalMessagesSent)" Caption="Общее кол-во отправленных SMS" Editable/>
+                <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalTestSessions)" Caption="Общее кол-во сессий HTTP (Web-browsing)" Editable/>
+                <DataGridColumn Field="@nameof(ReferenceInfoMetric.NegativeMossamplesCount)" Caption="Кол-во соединений с низкой разборчивостью" Editable/>
+                <DataGridColumn Field="@nameof(ReferenceInfoMetric.TotalTestVoiceConnections)" Caption="Общее кол-во голосовых соединений" Editable/>
+                <DataGridCommandColumn/>
+            </DataGrid>
             break;
         case ViewData.MessagingMetrics:
-
-            break;
-        case ViewData.ReferanceMetricsInfo:
 
             break;
         case ViewData.HttpTransmittingMetric:
@@ -108,7 +143,7 @@
     }
 
     <div class="filters">
-        <Button class="save" @onclick="Validation">Сохранить</Button>
+        <Button class="save" @onclick="Save">Сохранить</Button>
 
         <div class="filters-menu">
             <div class="filter-item file">

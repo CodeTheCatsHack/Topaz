@@ -4,10 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Scaffold.Model;
 
+[Table("HttpTransmittingMetric")]
 [Index("MeasureGroupId", Name = "fk_HttpTransmittingMetric_MeasureGroup1_idx", IsUnique = true)]
 public partial class HttpTransmittingMetric
 {
-    [Key] public int MeasureGroupId { get; set; }
+    [Key]
+    [Column("idHttpTransmittingMetric")]
+    public int IdHttpTransmittingMetric { get; set; }
+
+    public int? MeasureGroupId { get; set; }
 
     /// <summary>
     /// Доля неуспешных сессий по протоколу HTTP (HTTP Session Failure Ratio) [%]
@@ -17,12 +22,14 @@ public partial class HttpTransmittingMetric
     /// <summary>
     /// Среднее значение скорости передачи данных от абонента (HTTP UL Mean User Data Rate) [kbit/sec]
     /// </summary>
-    public float ULMeanUserDataRate { get; set; }
+    [Column("ULMeanUserDataRate")]
+    public float UlmeanUserDataRate { get; set; }
 
     /// <summary>
     /// Среднее значение скорости передачи данных к абоненту (HTTP DL Mean User Data Rate) [kbit/sec]
     /// </summary>
-    public float DLMeanUserDataRate { get; set; }
+    [Column("DLMeanUserDataRate")]
+    public float DlmeanUserDataRate { get; set; }
 
     /// <summary>
     /// Продолжительность успешной сессии (HTTP Session Time) [s]
@@ -31,5 +38,5 @@ public partial class HttpTransmittingMetric
 
     [ForeignKey("MeasureGroupId")]
     [InverseProperty("HttpTransmittingMetric")]
-    public virtual MeasureGroup MeasureGroup { get; set; } = null!;
+    public virtual MeasureGroup? MeasureGroup { get; set; }
 }

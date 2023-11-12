@@ -1,6 +1,6 @@
-﻿using OfficeOpenXml;
+﻿using System.Text.RegularExpressions;
+using OfficeOpenXml;
 using Scaffold.Model;
-using System.Text.RegularExpressions;
 
 namespace Parser
 {
@@ -33,7 +33,6 @@ namespace Parser
 
             try
             {
-
                 Filepath = filepath;
                 _package = new ExcelPackage(filepath);
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -60,7 +59,7 @@ namespace Parser
         {
             try
             {
-                return new MeasureInfo()
+                return new MeasureInfo
                 {
                     CompanyName = _ws.GetValue<string>(5, 1).Trim(),
                     CompanyType = _ws.GetValue<string>(6, 1).Trim(),
@@ -103,7 +102,7 @@ namespace Parser
                     break;
                 }
 
-                measure.MeasureGroup.Add(group);
+                measure.MeasureGroups.Add(group);
             }
 
             return measure;
@@ -119,7 +118,7 @@ namespace Parser
         {
             try
             {
-                return new MeasureGroup()
+                return new MeasureGroup
                 {
                     Measure = measure,
                     MeasureSubject = _ws.GetValue<string>(18, column),
@@ -128,7 +127,7 @@ namespace Parser
                         VoiceServiceNonAcessibility = _ws.GetValue<float>(19, column),
                         VoiceServiceCutOfffRatio = _ws.GetValue<float>(20, column),
                         SpeechQualityCallBasis = _ws.GetValue<float>(21, column),
-                        NegativeMOSsamplesRatio = _ws.GetValue<float>(22, column)
+                        NegativeMossamplesRatio = _ws.GetValue<float>(22, column)
                     },
                     MessagingMetric = new MessagingMetric()
                     {
@@ -138,15 +137,15 @@ namespace Parser
                     HttpTransmittingMetric = new HttpTransmittingMetric()
                     {
                         SessionFailureRatio = _ws.GetValue<float>(27, column),
-                        ULMeanUserDataRate = _ws.GetValue<float>(28, column),
-                        DLMeanUserDataRate = _ws.GetValue<float>(29, column),
+                        UlmeanUserDataRate = _ws.GetValue<float>(28, column),
+                        DlmeanUserDataRate = _ws.GetValue<float>(29, column),
                         SessionTime = _ws.GetValue<float>(30, column)
                     },
                     ReferenceInfoMetric = new ReferenceInfoMetric()
                     {
                         TotalTestVoiceConnections = _ws.GetValue<int>(32, column),
                         TotalVoiceSequences = _ws.GetValue<int>(33, column),
-                        NegativeMOSsamplesCount = _ws.GetValue<int>(34, column),
+                        NegativeMossamplesCount = _ws.GetValue<int>(34, column),
                         TotalMessagesSent = _ws.GetValue<int>(35, column),
                         TotalConnectionAttempts = _ws.GetValue<int>(36, column),
                         TotalTestSessions = _ws.GetValue<int>(37, column)
@@ -169,7 +168,10 @@ namespace Parser
             /// </summary>
             public class FileWrongExtensionException : Exception
             {
-                public FileWrongExtensionException(string extActual, string extExpected) : base($"Получен неправильный формат файла: {extActual}, ожидался: {extExpected}") { }
+                public FileWrongExtensionException(string extActual, string extExpected) : base(
+                    $"Получен неправильный формат файла: {extActual}, ожидался: {extExpected}")
+                {
+                }
             }
 
             /// <summary>
@@ -177,7 +179,10 @@ namespace Parser
             /// </summary>
             public class ConstructorException : Exception
             {
-                public ConstructorException(Exception? inner) : base("Ошибка инициализации класса. См. внутреннее исключение", inner) { }
+                public ConstructorException(Exception? inner) : base(
+                    "Ошибка инициализации класса. См. внутреннее исключение", inner)
+                {
+                }
             }
         }
     }

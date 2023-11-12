@@ -5,19 +5,19 @@ namespace Scaffold.Context;
 
 public partial class TopazContext
 {
-    public virtual DbSet<HttpTransmittingMetric> HttpTransmittingMetric { get; set; }
+    public virtual DbSet<HttpTransmittingMetric> HttpTransmittingMetrics { get; set; }
 
-    public virtual DbSet<Measure> Measure { get; set; }
+    public virtual DbSet<Measure> Measures { get; set; }
 
-    public virtual DbSet<MeasureGroup> MeasureGroup { get; set; }
+    public virtual DbSet<MeasureGroup> MeasureGroups { get; set; }
 
-    public virtual DbSet<MeasureInfo> MeasureInfo { get; set; }
+    public virtual DbSet<MeasureInfo> MeasureInfos { get; set; }
 
-    public virtual DbSet<MessagingMetric> MessagingMetric { get; set; }
+    public virtual DbSet<MessagingMetric> MessagingMetrics { get; set; }
 
-    public virtual DbSet<ReferenceInfoMetric> ReferenceInfoMetric { get; set; }
+    public virtual DbSet<ReferenceInfoMetric> ReferenceInfoMetrics { get; set; }
 
-    public virtual DbSet<VoiceConnectionMetric> VoiceConnectionMetric { get; set; }
+    public virtual DbSet<VoiceConnectionMetric> VoiceConnectionMetrics { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -27,29 +27,25 @@ public partial class TopazContext
 
         modelBuilder.Entity<HttpTransmittingMetric>(entity =>
         {
-            entity.HasKey(e => e.MeasureGroupId).HasName("PRIMARY");
+            entity.HasKey(e => e.IdHttpTransmittingMetric).HasName("PRIMARY");
 
-            entity.Property(e => e.MeasureGroupId).ValueGeneratedNever();
-            entity.Property(e => e.DLMeanUserDataRate).HasComment(
+            entity.Property(e => e.DlmeanUserDataRate).HasComment(
                 "Среднее значение скорости передачи данных к абоненту (HTTP DL Mean User Data Rate) [kbit/sec]");
             entity.Property(e => e.SessionFailureRatio)
                 .HasComment("Доля неуспешных сессий по протоколу HTTP (HTTP Session Failure Ratio) [%]");
             entity.Property(e => e.SessionTime).HasComment("Продолжительность успешной сессии (HTTP Session Time) [s]");
-            entity.Property(e => e.ULMeanUserDataRate).HasComment(
+            entity.Property(e => e.UlmeanUserDataRate).HasComment(
                 "Среднее значение скорости передачи данных от абонента (HTTP UL Mean User Data Rate) [kbit/sec]");
 
             entity.HasOne(d => d.MeasureGroup).WithOne(p => p.HttpTransmittingMetric)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_HttpTransmittingMetric_MeasureGroup1");
         });
 
         modelBuilder.Entity<Measure>(entity =>
         {
-            entity.HasKey(e => e.id).HasName("PRIMARY");
+            entity.HasKey(e => e.IdMeasure).HasName("PRIMARY");
 
-            entity.Property(e => e.id)
-                .ValueGeneratedNever()
-                .HasComment("Идентификатор измерения");
+            entity.Property(e => e.IdMeasure).HasComment("Идентификатор измерения");
             entity.Property(e => e.Conditions).HasComment("Условия проведения контроля");
             entity.Property(e => e.EndMeasure).HasComment("Дата конца контроля");
             entity.Property(e => e.Equipment).HasComment("Измерительное оборудование");
@@ -59,45 +55,34 @@ public partial class TopazContext
 
         modelBuilder.Entity<MeasureGroup>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
+            entity.HasKey(e => e.IdMeasureGroup).HasName("PRIMARY");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
-
-            entity.HasOne(d => d.Measure).WithMany(p => p.MeasureGroup)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_MeasureGroup_Measure1");
+            entity.HasOne(d => d.Measure).WithMany(p => p.MeasureGroups).HasConstraintName("fk_MeasureGroup_Measure1");
         });
 
         modelBuilder.Entity<MeasureInfo>(entity =>
         {
-            entity.HasKey(e => e.MeasureId).HasName("PRIMARY");
+            entity.HasKey(e => e.IdMeasureInfo).HasName("PRIMARY");
 
-            entity.Property(e => e.MeasureId).ValueGeneratedNever();
-
-            entity.HasOne(d => d.Measure).WithOne(p => p.MeasureInfo)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_MeasureInfo_Measure");
+            entity.HasOne(d => d.Measure).WithOne(p => p.MeasureInfo).HasConstraintName("fk_MeasureInfo_Measure1");
         });
 
         modelBuilder.Entity<MessagingMetric>(entity =>
         {
-            entity.HasKey(e => e.MeasureGroupId).HasName("PRIMARY");
+            entity.HasKey(e => e.IdMessagingMetric).HasName("PRIMARY");
 
-            entity.Property(e => e.MeasureGroupId).ValueGeneratedNever();
             entity.Property(e => e.AverageMessageDeliveryTime).HasComment("Среднее время доставки SMS сообщений [сек]");
             entity.Property(e => e.UndeliveredMessagePercentage).HasComment("Доля недоставленных SMS сообщений [%]");
 
             entity.HasOne(d => d.MeasureGroup).WithOne(p => p.MessagingMetric)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_MessagingMetric_MeasureGroup1");
         });
 
         modelBuilder.Entity<ReferenceInfoMetric>(entity =>
         {
-            entity.HasKey(e => e.MeasureGroupId).HasName("PRIMARY");
+            entity.HasKey(e => e.IdReferenceInfoMetric).HasName("PRIMARY");
 
-            entity.Property(e => e.MeasureGroupId).ValueGeneratedNever();
-            entity.Property(e => e.NegativeMOSsamplesCount).HasComment(
+            entity.Property(e => e.NegativeMossamplesCount).HasComment(
                 "Количество голосовых соединений с низкой разборчивостью (Negative MOS samples Count, MOS POLQA<2,6)[%]");
             entity.Property(e => e.TotalConnectionAttempts)
                 .HasComment("Общее количество попыток соединений с сервером передачи данных HTTP (Загрузка файлов)");
@@ -110,16 +95,14 @@ public partial class TopazContext
                 .HasComment("Общее количество голосовых последовательностей в оцениваемых соединениях (POLQA) ");
 
             entity.HasOne(d => d.MeasureGroup).WithOne(p => p.ReferenceInfoMetric)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_ReferenceInfoMetric_MeasureGroup1");
         });
 
         modelBuilder.Entity<VoiceConnectionMetric>(entity =>
         {
-            entity.HasKey(e => e.MeasureGroupId).HasName("PRIMARY");
+            entity.HasKey(e => e.IdVoiceConnectionMetric).HasName("PRIMARY");
 
-            entity.Property(e => e.MeasureGroupId).ValueGeneratedNever();
-            entity.Property(e => e.NegativeMOSsamplesRatio)
+            entity.Property(e => e.NegativeMossamplesRatio)
                 .HasComment("Доля голосовых соединений с низкой разборчивостью речи");
             entity.Property(e => e.SpeechQualityCallBasis).HasComment("Средняя разборчивость речи на соединение");
             entity.Property(e => e.VoiceServiceCutOfffRatio).HasComment("Доля обрывов голосовых соединений ");
@@ -127,7 +110,6 @@ public partial class TopazContext
                 .HasComment("Доля неуспешных попыток установления голосового соединения ");
 
             entity.HasOne(d => d.MeasureGroup).WithOne(p => p.VoiceConnectionMetric)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_VoiceConnectionMetric_MeasureGroup1");
         });
 

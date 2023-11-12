@@ -13,7 +13,7 @@ public class IndexComponent : ComponentBase
     protected override async Task OnInitializedAsync()
     {
         if (int.TryParse(IdMeasure, out var paramIdMeasure))
-            Measure = ServiceInfoMeasure.Measures.FirstOrDefault(x => x.id == paramIdMeasure);
+            Measure = ServiceInfoMeasure.Measures.FirstOrDefault(x => x.IdMeasure == paramIdMeasure);
         await base.OnInitializedAsync();
     }
 }

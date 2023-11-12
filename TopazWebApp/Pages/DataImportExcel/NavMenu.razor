@@ -14,7 +14,7 @@
         {
             @foreach (var measure in Measures)
             {
-                <Button @onclick="() => OnNavMeasure(measure.id)">@measure.Place</Button>
+                <Button @onclick="() => OnNavMeasure(measure.IdMeasure)">@measure.Place</Button>
             }
         }
         else
