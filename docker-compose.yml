@@ -1,0 +1,28 @@
+version: '3.1'
+
+services:
+  app:
+    build: build/
+    restart: always
+    hostname: topaz-web
+    ports:
+      - 8080:80
+    networks:
+      backend: {}
+
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_USER: topazuser
+      MYSQL_PASSWORD: topazpw
+      MYSQL_DATABASE: db_topaz
+    volumes:
+      - ./mysql:/var/lib/mysql    
+    networks:
+      backend: {}
+
+networks:
+  backend:
+    driver: bridge
+    name: bus
