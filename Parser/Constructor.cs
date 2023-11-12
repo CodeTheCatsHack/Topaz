@@ -1,21 +1,13 @@
-﻿using OfficeOpenXml;
-using OfficeOpenXml.FormulaParsing;
+﻿using System.Reflection;
+using OfficeOpenXml;
 using Scaffold.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Parser
 {
     public class Constructor
     {
-        private readonly ExcelPackage _package;
-        private ExcelWorksheet _ws => _package.Workbook.Worksheets.First();
         private readonly string _newFile;
+        private readonly ExcelPackage _package;
         private readonly string _template;
 
         public Constructor()
@@ -35,18 +27,20 @@ namespace Parser
             {
                 throw new FileNotFoundException("template not found: " + templateFilepath);
             }
-            if (Path.GetExtension(newFilepath) != ".xlsx" 
+
+            if (Path.GetExtension(newFilepath) != ".xlsx"
                 || Path.GetExtension(templateFilepath) != ".xlsx")
             {
                 throw new ArgumentException("Файл и шаблон должен быть расширения .xlsx");
             }
-            
+
 
             FileInfo newFile = new FileInfo(newFilepath);
             if (newFile.Exists)
             {
-                newFile.Delete();                
+                newFile.Delete();
             }
+
             File.Copy(templateFilepath, newFilepath);
 
             _newFile = newFilepath;
@@ -54,6 +48,8 @@ namespace Parser
 
             _package = new ExcelPackage(_newFile);
         }
+
+        private ExcelWorksheet _ws => _package.Workbook.Worksheets.First();
 
         public async Task ReplaceAsync(string find, string? replace)
         {
@@ -87,7 +83,7 @@ namespace Parser
         }
 
         public async Task InjectAsync<IModelContext>(IModelContext obj)
-        {            
+        {
             if (obj is null)
             {
                 return;
@@ -110,19 +106,19 @@ namespace Parser
                     if (property.GetValue(obj) is DateOnly date)
                     {
                         result = date.ToString("dd.MM.yyyy");
-                    } else
+                    }
+                    else
                     {
                         result = property.GetValue(obj)?.ToString();
                     }
 
-                    
                     await ReplaceAsync("%" + property.Name, result);
                 }
                 catch
                 {
-
                 }
             }
+
             return;
         }
 

@@ -1,8 +1,5 @@
 ﻿using Blazorise.Charts;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting.Internal;
-using Microsoft.JSInterop;
 using Parser;
 using Scaffold.Model;
 using Topaz.Data.Service;
@@ -11,8 +8,7 @@ namespace Topaz.Data.Component.Index;
 
 public class IndexComponent : ComponentBase
 {
-    [Parameter]
-    public int measureId { get; set; }
+    [Parameter] public int measureId { get; set; }
 
     public Measure? Measure { get; set; }
 
@@ -20,14 +16,11 @@ public class IndexComponent : ComponentBase
 
     public Chart<float> VCMetricsChart { get; set; } = new Chart<float>();
 
-    [Inject]
-    public ServiceDataDataBase ServiceDataDataBase { get; set; }
+    [Inject] public ServiceDataDataBase ServiceDataDataBase { get; set; }
 
-    [Inject]
-    public NavigationManager NavigationManager { get; set; }
+    [Inject] public NavigationManager NavigationManager { get; set; }
 
-    [Inject]
-    public IWebHostEnvironment WebHostEnvironment { get; set; }
+    [Inject] public IWebHostEnvironment WebHostEnvironment { get; set; }
 
     protected async Task SaveMeasure()
     {
@@ -44,7 +37,8 @@ public class IndexComponent : ComponentBase
 
         foreach (MeasureGroup group in Measure.MeasureGroups)
         {
-            chartLabels.Add(nameof(group.VoiceConnectionMetric.VoiceServiceNonAcessibility) + " " + group.MeasureSubject);
+            chartLabels.Add(
+                nameof(group.VoiceConnectionMetric.VoiceServiceNonAcessibility) + " " + group.MeasureSubject);
             chartData.Add(group.VoiceConnectionMetric!.VoiceServiceNonAcessibility);
 
             chartLabels.Add(nameof(group.VoiceConnectionMetric.VoiceServiceCutOfffRatio) + " " + group.MeasureSubject);
@@ -57,8 +51,18 @@ public class IndexComponent : ComponentBase
             chartData.Add(group.VoiceConnectionMetric!.NegativeMossamplesRatio);
         }
 
-        List<string> backgroundColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 0.2f), ChartColor.FromRgba(54, 162, 235, 0.2f), ChartColor.FromRgba(255, 206, 86, 0.2f), ChartColor.FromRgba(75, 192, 192, 0.2f), ChartColor.FromRgba(153, 102, 255, 0.2f), ChartColor.FromRgba(255, 159, 64, 0.2f) };
-        List<string> borderColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 1f), ChartColor.FromRgba(54, 162, 235, 1f), ChartColor.FromRgba(255, 206, 86, 1f), ChartColor.FromRgba(75, 192, 192, 1f), ChartColor.FromRgba(153, 102, 255, 1f), ChartColor.FromRgba(255, 159, 64, 1f) };
+        List<string> backgroundColors = new List<string>
+        {
+            ChartColor.FromRgba(255, 99, 132, 0.2f), ChartColor.FromRgba(54, 162, 235, 0.2f),
+            ChartColor.FromRgba(255, 206, 86, 0.2f), ChartColor.FromRgba(75, 192, 192, 0.2f),
+            ChartColor.FromRgba(153, 102, 255, 0.2f), ChartColor.FromRgba(255, 159, 64, 0.2f)
+        };
+        List<string> borderColors = new List<string>
+        {
+            ChartColor.FromRgba(255, 99, 132, 1f), ChartColor.FromRgba(54, 162, 235, 1f),
+            ChartColor.FromRgba(255, 206, 86, 1f), ChartColor.FromRgba(75, 192, 192, 1f),
+            ChartColor.FromRgba(153, 102, 255, 1f), ChartColor.FromRgba(255, 159, 64, 1f)
+        };
 
         ChartDataset<float> dataSet = new ChartDataset<float>()
         {
@@ -80,17 +84,32 @@ public class IndexComponent : ComponentBase
         Measure = await ServiceDataDataBase.GetDataMeasureById(measureId);
     }
 
+    public void EnsureExportDirectoryExists(string pathDir)
+    {
+        var exportDirectoryPath = Path.Combine(WebHostEnvironment.WebRootPath, pathDir);
+
+        if (!Directory.Exists(exportDirectoryPath))
+            try
+            {
+                Directory.CreateDirectory(exportDirectoryPath);
+            }
+            catch (Exception ex)
+            {
+            }
+    }
+
     protected async Task ExportFileCurrentMeasure()
     {
         var guidFileMeasure = Guid.NewGuid();
         var relativeExportPath = Path.Combine("export", $"{guidFileMeasure}.xlsx");
         var absExportPath = Path.Combine(WebHostEnvironment.WebRootPath, relativeExportPath);
-        
-        Constructor constructor = new Constructor(absExportPath, Path.Combine(WebHostEnvironment.WebRootPath,"export-template","default.xlsx"));
+
+        EnsureExportDirectoryExists("export");
+        Constructor constructor = new Constructor(absExportPath,
+            Path.Combine(WebHostEnvironment.WebRootPath, "export-template", "default.xlsx"));
 
         await constructor.InjectMeasure(Measure);
         constructor.Save();
-
         NavigationManager.NavigateTo($"export/{guidFileMeasure}.xlsx", true);
     }
 
