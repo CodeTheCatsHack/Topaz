@@ -157,23 +157,23 @@
         <div class="block-info fields">
             <span class="title">Информация о филиале</span>
             <Field>
-                <FieldLabel>@nameof(Measure.MeasureInfo.Protocol)</FieldLabel>
+                <FieldLabel>Наименование протокола</FieldLabel>
                 <TextEdit Text="@(Measure?.MeasureInfo?.Protocol)" TextChanged="@(value => Measure.MeasureInfo.Protocol = value)" />
             </Field>
             <Field>
-                <FieldLabel>@nameof(Measure.MeasureInfo.CompanyName)</FieldLabel>
+                <FieldLabel>Наименование предприятия</FieldLabel>
                 <TextEdit Text="@(Measure?.MeasureInfo?.CompanyName)" TextChanged="@(value => Measure.MeasureInfo.CompanyName = value)"/>
             </Field>
             <Field>
-                <FieldLabel>@nameof(Measure.MeasureInfo.CompanyType)</FieldLabel>
+                <FieldLabel>Тип предприятия</FieldLabel>
                 <TextEdit Text="@(Measure?.MeasureInfo?.CompanyType)" TextChanged="@(value => Measure.MeasureInfo.CompanyType = value)" />
             </Field>
             <Field>
-                <FieldLabel>@nameof(Measure.MeasureInfo.CompanyAbbr)</FieldLabel>
+                <FieldLabel>Аббривиатура предприятия</FieldLabel>
                 <TextEdit Text="@(Measure?.MeasureInfo?.CompanyAbbr)" TextChanged="@(value => Measure.MeasureInfo.CompanyAbbr = value)" />
             </Field>
             <Field>
-                <FieldLabel>@nameof(Measure.MeasureInfo.CompanyFullname)</FieldLabel>
+                <FieldLabel>Полное наименование предприятия</FieldLabel>
                 <TextEdit Text="@(Measure?.MeasureInfo?.CompanyFullname)" TextChanged="@(value => Measure.MeasureInfo.CompanyFullname = value)" />
             </Field>
         </div>
@@ -215,5 +215,5 @@
 
 <Button Color="Color.Primary" Clicked="SaveMeasure">Сохранить в БД</Button>
 <Button Color="Color.Primary" Clicked="ExportFileCurrentMeasure">Экспорт на локальный компьютер</Button>
-<Button Color="Color.Primary" Clicked="HandleRedraw">Redraw</Button>
+<Button Color="Color.Primary" Clicked="HandleRedraw">Перерисовать диаграмму</Button>
 <Chart TextSize="TextSize.ExtraLarge" @ref="VCMetricsChart" TItem="float" Type="ChartType.Radar" />
