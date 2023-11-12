@@ -126,7 +126,8 @@
     height: 62px;
     width: 100%;
     margin-top: 28px;
-    padding: 0 10px;
+    padding: 0 8px;
+    color: rgba(88, 88, 88, 1);
     background-color: #FFFFFF;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;   
     border-radius: 20px;
