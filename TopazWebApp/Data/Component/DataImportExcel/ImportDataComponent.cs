@@ -48,6 +48,31 @@ public class ImportDataComponent : ComponentBase
         await base.OnInitializedAsync();
     }
 
+    #region Обратная связь
+
+    protected Alert AlertImports { get; set; }
+
+    protected Color AlertColor { get; set; } = Color.Success;
+    protected string AlertTitle { get; set; }
+    protected string AlertDescription { get; set; }
+
+    public void AlertShow(TimeSpan duration, string title, string description, Color color)
+    {
+        AlertTitle = title;
+        AlertDescription = description;
+        AlertColor = color;
+
+        AlertImports.Show();
+
+        Task.Delay(duration).ContinueWith(_ =>
+        {
+            AlertImports.Hide();
+            StateHasChanged();
+        });
+    }
+
+    #endregion
+
     #region Запросы DataGrid
 
     protected void CallbackRemove(Measure obj)
@@ -175,6 +200,13 @@ public class ImportDataComponent : ComponentBase
     #endregion
 
     #region Навигационные кнопки
+
+    protected bool ShowModal;
+
+    protected void ToggleModal()
+    {
+        ShowModal = !ShowModal;
+    }
 
     protected enum ViewData
     {

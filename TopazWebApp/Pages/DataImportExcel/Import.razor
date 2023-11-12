@@ -13,7 +13,8 @@
             </button>
         </div>
     </div>
-    @if (showModal){
+    @if (ShowModal)
+    {
         <div class="modal show" id="modal">
             <div class="content">
                 <button class="modal-close" id="modalClose" @onclick="ToggleModal">Закрыть</button>
@@ -43,7 +44,7 @@
                     {
                         <div class="item error">
                             Нет данных
-                        </div>   
+                        </div>
                     }
                 </div>
             </div>
@@ -428,13 +429,13 @@
         <Button class="cancel" @onclick="() => SaveMultiplyOrCancel(false)">Удаление всех выделенных строк</Button>
     </Buttons>
 </div>
+
+<Alert @ref="AlertImports" Color="AlertColor">
+    <AlertMessage>
+        @AlertTitle
+    </AlertMessage>
+    <AlertDescription>
+        @AlertTitle
+    </AlertDescription>
+</Alert>
 </div>
-
-@code{
-    bool showModal = false;
-
-    void ToggleModal()
-    {
-        showModal = !showModal;
-    }
-}
