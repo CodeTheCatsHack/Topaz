@@ -201,6 +201,13 @@ public class ImportDataComponent : ComponentBase
 
     #region Навигационные кнопки
 
+    protected bool ShowModal;
+
+    protected void ToggleModal()
+    {
+        ShowModal = !ShowModal;
+    }
+
     protected enum ViewData
     {
         Measure,
