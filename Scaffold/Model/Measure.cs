@@ -41,8 +41,5 @@ public partial class Measure
     [StringLength(255)]
     public string Equipment { get; set; } = null!;
 
-    [InverseProperty("Measure")]
-    public virtual ICollection<MeasureGroup> MeasureGroups { get; } = new List<MeasureGroup>();
-
-    [InverseProperty("Measure")] public virtual MeasureInfo? MeasureInfo { get; set; }
+    [InverseProperty("Measure")] public virtual MeasureInfo MeasureInfo { get; set; } = null!;
 }

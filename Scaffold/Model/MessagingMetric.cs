@@ -24,5 +24,5 @@ public partial class MessagingMetric
 
     [ForeignKey("MeasureGroupId")]
     [InverseProperty("MessagingMetric")]
-    public virtual MeasureGroup? MeasureGroup { get; set; }
+    public virtual MeasureGroup MeasureGroup { get; set; } = null!;
 }

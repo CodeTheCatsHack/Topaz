@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using Blazorise;
+using Blazorise.DataGrid;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.JSInterop;
 using Parser;
 using Scaffold.Model;
 using Topaz.Data.Service;
@@ -55,6 +55,66 @@ public class ImportDataComponent : ComponentBase
         var fileName = Path.Combine("file", $"{obj.FileGuid}.xlsx");
         var filePath = Path.Combine(HostingEnvironment.WebRootPath, fileName);
         File.Delete(filePath);
+    }
+
+    protected void CallbackUpdateSaved(SavedRowItem<MessagingMetric, Dictionary<string, object>> obj)
+    {
+        var tempMeasure = Measures.FirstOrDefault(x => x.FileGuid == obj.NewItem.MeasureGroup.Measure.FileGuid)!;
+        Measures.Remove(tempMeasure);
+        var groupsNew = tempMeasure.MeasureGroups;
+        var tempGroup = groupsNew.FirstOrDefault(x => x.GuidCollection == obj.NewItem.MeasureGroup.GuidCollection);
+        groupsNew.Remove(tempGroup!);
+        tempGroup!.MessagingMetric = obj.NewItem;
+        groupsNew.Add(tempGroup!);
+        tempMeasure.MeasureGroups = groupsNew;
+        Measures.Add(tempMeasure);
+    }
+
+    protected void CallbackUpdateSaved(SavedRowItem<ReferenceInfoMetric, Dictionary<string, object>> obj)
+    {
+        var tempMeasure = Measures.FirstOrDefault(x => x.FileGuid == obj.NewItem.MeasureGroup.Measure.FileGuid)!;
+        Measures.Remove(tempMeasure);
+        var groupsNew = tempMeasure.MeasureGroups;
+        var tempGroup = groupsNew.FirstOrDefault(x => x.GuidCollection == obj.NewItem.MeasureGroup.GuidCollection);
+        groupsNew.Remove(tempGroup!);
+        tempGroup!.ReferenceInfoMetric = obj.NewItem;
+        groupsNew.Add(tempGroup!);
+        tempMeasure.MeasureGroups = groupsNew;
+        Measures.Add(tempMeasure);
+    }
+
+    protected void CallbackUpdateSaved(SavedRowItem<VoiceConnectionMetric, Dictionary<string, object>> obj)
+    {
+        var tempMeasure = Measures.FirstOrDefault(x => x.FileGuid == obj.NewItem.MeasureGroup.Measure.FileGuid)!;
+        Measures.Remove(tempMeasure);
+        var groupsNew = tempMeasure.MeasureGroups;
+        var tempGroup = groupsNew.FirstOrDefault(x => x.GuidCollection == obj.NewItem.MeasureGroup.GuidCollection);
+        groupsNew.Remove(tempGroup!);
+        tempGroup!.VoiceConnectionMetric = obj.NewItem;
+        groupsNew.Add(tempGroup!);
+        tempMeasure.MeasureGroups = groupsNew;
+        Measures.Add(tempMeasure);
+    }
+
+    protected void CallbackUpdateSaved(SavedRowItem<HttpTransmittingMetric, Dictionary<string, object>> obj)
+    {
+        var tempMeasure = Measures.FirstOrDefault(x => x.FileGuid == obj.NewItem.MeasureGroup.Measure.FileGuid)!;
+        Measures.Remove(tempMeasure);
+        var groupsNew = tempMeasure.MeasureGroups;
+        var tempGroup = groupsNew.FirstOrDefault(x => x.GuidCollection == obj.NewItem.MeasureGroup.GuidCollection);
+        groupsNew.Remove(tempGroup!);
+        tempGroup!.HttpTransmittingMetric = obj.NewItem;
+        groupsNew.Add(tempGroup!);
+        tempMeasure.MeasureGroups = groupsNew;
+        Measures.Add(tempMeasure);
+    }
+
+    protected void CallbackUpdateSaved(SavedRowItem<MeasureInfo, Dictionary<string, object>> obj)
+    {
+        var tempMeasure = Measures.FirstOrDefault(x => x.FileGuid == obj.NewItem.Measure.FileGuid)!;
+        Measures.Remove(tempMeasure);
+        tempMeasure.MeasureInfo = obj.NewItem;
+        Measures.Add(tempMeasure);
     }
 
     #endregion
@@ -110,21 +170,6 @@ public class ImportDataComponent : ComponentBase
         }
 
         Measures.Clear();
-    }
-
-    #endregion
-
-    #region ХотКеи
-
-    [Inject] public IJSRuntime JsRuntime { get; set; }
-
-    protected string ButtonId => $"button_{Guid.NewGuid()}";
-
-    protected override async void OnAfterRender(bool firstRender)
-    {
-        await base.OnAfterRenderAsync(firstRender);
-
-        if (firstRender) await JsRuntime.InvokeVoidAsync("blazorHotkeys.registerHotkey", "Enter", ButtonId);
     }
 
     #endregion

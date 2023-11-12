@@ -1,0 +1,58 @@
+span,
+p{
+    color: #000000;
+}
+
+p{
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 0 !important;
+}
+
+p.intro{
+    margin-top: 61px;
+}
+
+p.intro > a{
+    color: #000000;
+}
+
+.title{
+    margin-top: 37px;
+    font-weight: 800;
+    font-size: 48px;
+}
+
+.subtitle{
+    margin-top: 37px;
+    font-weight: 800;
+    font-size: 24px;
+}
+
+.image-wrap{
+    display: flex;
+    flex-direction: column;
+    margin-top: 37px;
+}
+
+.image-title{
+    font-weight: 800;
+    font-size: 48px;
+}
+
+.image{
+    display: grid;
+    margin-top: 64px;
+    grid-template-columns: 2fr 1fr;
+    grid-gap: 26px;
+}
+
+.image > img{
+    width: 100%;
+    aspect-ratio: 1 / 1;
+}
+
+.image > .image-descr{
+    font-size: 24px;
+    font-weight: 400;
+}

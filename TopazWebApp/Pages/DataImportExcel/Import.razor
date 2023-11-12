@@ -7,7 +7,7 @@
 <div class="sidebar">
     <div class="top-row ps-3 navbar navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="" style="color:black">Действия</a>
+            <a class="navbar-brand" href="" style="color:black">Выбор импорт таблиц</a>
             <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu" style="color:black">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -49,9 +49,13 @@
 <h1>Импорт</h1>
 
 <div class="table-wrapper">
-    @switch (ViewDataStatus)
-    {
-        case ViewData.MeasureInfo:
+@switch (ViewDataStatus)
+{
+    case ViewData.MeasureInfo:
+        <Field>
+            <Text>Таблица информации по протоколу</Text>
+        </Field>
+        <Field>
             <DataGrid TItem="MeasureInfo"
                       Data="@Measures.Select(x => x.MeasureInfo)"
                       bind-SelectedRow="SelectedMeasureInfo"
@@ -62,6 +66,7 @@
                       Editable
                       Filterable
                       Sortable
+                      RowUpdated="CallbackUpdateSaved"
                       FilterMode="DataGridFilterMode.Menu"
                       SortMode="DataGridSortMode.Multiple"
                       UseValidation
@@ -83,8 +88,13 @@
                     }
                 </DetailRowTemplate>
             </DataGrid>
-            break;
-        case ViewData.Measure:
+        </Field>
+        break;
+    case ViewData.Measure:
+        <Field>
+            <Text>Таблица Филиалов</Text>
+        </Field>
+        <Field>
             <DataGrid TItem="Measure"
                       Data="Measures"
                       PageSize="10"
@@ -111,8 +121,13 @@
                     <DataGridCommandColumn/>
                 </DataGridColumns>
             </DataGrid>
-            break;
-        case ViewData.ReferanceInfo:
+        </Field>
+        break;
+    case ViewData.ReferanceInfo:
+        <Field>
+            <Text>Таблица cправочной информация</Text>
+        </Field>
+        <Field>
             <DataGrid TItem="ReferenceInfoMetric"
                       Data="@(Measures.CastTo<ReferenceInfoMetric>())"
                       bind-SelectedRow="SelectedReferenceInfoMetric"
@@ -123,6 +138,7 @@
                       Editable
                       Filterable
                       Sortable
+                      RowUpdated="CallbackUpdateSaved"
                       FilterMode="DataGridFilterMode.Menu"
                       SortMode="DataGridSortMode.Multiple"
                       UseValidation
@@ -139,14 +155,28 @@
                 <DetailRowTemplate>
                     @{
                         var measure = context.MeasureGroup.Measure;
-                        <Text>
-                            Виртуальный Id(Протокол): @measure.FileGuid
-                        </Text>
+                        <Form>
+                            <Field>
+                                <Text>
+                                    Виртуальный Id(Протокол): @measure.FileGuid
+                                </Text>
+                            </Field>
+                            <Field>
+                                <Text>
+                                    Объект контроля (провайдер связи): @context.MeasureGroup.MeasureSubject
+                                </Text>
+                            </Field>
+                        </Form>
                     }
                 </DetailRowTemplate>
             </DataGrid>
-            break;
-        case ViewData.MessagingMetrics:
+        </Field>
+        break;
+    case ViewData.MessagingMetrics:
+        <Field>
+            <Text>Таблица показателей передачи текстовых сообщений</Text>
+        </Field>
+        <Field>
             <DataGrid TItem="MessagingMetric"
                       Data="@(Measures.CastTo<MessagingMetric>())"
                       bind-SelectedRow="SelectedMessagingMetric"
@@ -157,6 +187,7 @@
                       Editable
                       Filterable
                       Sortable
+                      RowUpdated="CallbackUpdateSaved"
                       FilterMode="DataGridFilterMode.Menu"
                       SortMode="DataGridSortMode.Multiple"
                       UseValidation
@@ -169,14 +200,28 @@
                 <DetailRowTemplate>
                     @{
                         var measure = context.MeasureGroup.Measure;
-                        <Text>
-                            Виртуальный Id(Протокол): @measure.FileGuid
-                        </Text>
+                        <Form>
+                            <Field>
+                                <Text>
+                                    Виртуальный Id(Протокол): @measure.FileGuid
+                                </Text>
+                            </Field>
+                            <Field>
+                                <Text>
+                                    Объект контроля (провайдер связи): @context.MeasureGroup.MeasureSubject
+                                </Text>
+                            </Field>
+                        </Form>
                     }
                 </DetailRowTemplate>
             </DataGrid>
-            break;
-        case ViewData.HttpTransmittingMetric:
+        </Field>
+        break;
+    case ViewData.HttpTransmittingMetric:
+        <Field>
+            <Text>Показатели по передаче данных(за исключением услуг связи по передаче данных для целей передачи голосовой информации)</Text>
+        </Field>
+        <Field>
             <DataGrid TItem="HttpTransmittingMetric"
                       Data="@(Measures.CastTo<HttpTransmittingMetric>())"
                       bind-SelectedRow="SelectedHttpTransMetric"
@@ -187,6 +232,7 @@
                       Editable
                       Filterable
                       Sortable
+                      RowUpdated="CallbackUpdateSaved"
                       FilterMode="DataGridFilterMode.Menu"
                       SortMode="DataGridSortMode.Multiple"
                       UseValidation
@@ -201,14 +247,28 @@
                 <DetailRowTemplate>
                     @{
                         var measure = context.MeasureGroup.Measure;
-                        <Text>
-                            Виртуальный Id(Протокол): @measure.FileGuid
-                        </Text>
+                        <Form>
+                            <Field>
+                                <Text>
+                                    Виртуальный Id(Протокол): @measure.FileGuid
+                                </Text>
+                            </Field>
+                            <Field>
+                                <Text>
+                                    Объект контроля (провайдер связи): @context.MeasureGroup.MeasureSubject
+                                </Text>
+                            </Field>
+                        </Form>
                     }
                 </DetailRowTemplate>
             </DataGrid>
-            break;
-        case ViewData.VoiceConnectionMetric:
+        </Field>
+        break;
+    case ViewData.VoiceConnectionMetric:
+        <Field>
+            <Text>Показатели голосового соединения</Text>
+        </Field>
+        <Field>
             <DataGrid TItem="VoiceConnectionMetric"
                       Data="@(Measures.CastTo<VoiceConnectionMetric>())"
                       bind-SelectedRow="SelectedVoiceConnectionMetric"
@@ -219,6 +279,7 @@
                       Editable
                       Filterable
                       Sortable
+                      RowUpdated="CallbackUpdateSaved"
                       FilterMode="DataGridFilterMode.Menu"
                       SortMode="DataGridSortMode.Multiple"
                       UseValidation
@@ -233,34 +294,43 @@
                 <DetailRowTemplate>
                     @{
                         var measure = context.MeasureGroup.Measure;
-                        <Text>
-                            Виртуальный Id(Протокол): @measure.FileGuid
-                        </Text>
+                        <Form>
+                            <Field>
+                                <Text>
+                                    Виртуальный Id(Протокол): @measure.FileGuid
+                                </Text>
+                            </Field>
+                            <Field>
+                                <Text>
+                                    Объект контроля (провайдер связи): @context.MeasureGroup.MeasureSubject
+                                </Text>
+                            </Field>
+                        </Form>
                     }
                 </DetailRowTemplate>
             </DataGrid>
-            break;
-        default:
-            throw new ArgumentOutOfRangeException();
-    }
+        </Field>
+        break;
+    default:
+        throw new ArgumentOutOfRangeException();
+}
+<div class="filters">
+    <Buttons>
+        <Button class="save" @onclick="() => SaveOrCancel(true)">Сохранить всё</Button>
+        <Button class="save" @onclick="() => SaveMultiplyOrCancel(true)">Сохранить выделённое</Button>
+    </Buttons>
+    <div class="filters-menu">
+        <div class="filter-item file">
+            <Field>
+                <FileEdit @ref="fileEdit" Changed="OnChanged" Filter=".xlsx" Multiple/>
+            </Field>
 
-    <div class="filters">
-        <Buttons>
-            <Button class="save" id="@ButtonId" @onclick="() => SaveOrCancel(true)">Сохранить всё</Button>
-            <Button class="save" @onclick="() => SaveMultiplyOrCancel(true)">Сохранить выделённое</Button>
-        </Buttons>
-        <div class="filters-menu">
-            <div class="filter-item file">
-                <Field>
-                    <FileEdit @ref="fileEdit" Changed="OnChanged" Filter=".xlsx" Multiple/>
-                </Field>
-
-                <Button @onclick="UploadFiles">Загрузить файлы на сервер</Button>
-            </div>
+            <Button @onclick="UploadFiles">Загрузить файлы на сервер</Button>
         </div>
-        <Buttons>
-            <Button class="cancel" @onclick="() => SaveOrCancel(true)">Сброс</Button>
-            <Button class="cancel" @onclick="() => SaveMultiplyOrCancel(false)">Удаление всех выделенных строк</Button>
-        </Buttons>
     </div>
+    <Buttons>
+        <Button class="cancel" @onclick="() => SaveOrCancel(true)">Сброс</Button>
+        <Button class="cancel" @onclick="() => SaveMultiplyOrCancel(false)">Удаление всех выделенных строк</Button>
+    </Buttons>
+</div>
 </div>

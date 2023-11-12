@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\assets\images\faq\" />
     <Folder Include="wwwroot\file\"/>
   </ItemGroup>
 

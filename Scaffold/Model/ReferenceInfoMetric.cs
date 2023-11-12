@@ -47,5 +47,5 @@ public partial class ReferenceInfoMetric
 
     [ForeignKey("MeasureGroupId")]
     [InverseProperty("ReferenceInfoMetric")]
-    public virtual MeasureGroup? MeasureGroup { get; set; }
+    public virtual MeasureGroup MeasureGroup { get; set; } = null!;
 }
